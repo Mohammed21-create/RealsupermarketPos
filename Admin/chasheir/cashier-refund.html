@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sales - SmartPOS</title>
+
+<link rel="stylesheet" href="admin.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+
+<body>
+
+<div class="admin-container">
+
+    <!-- SIDEBAR -->
+    <div class="sidebar">
+        <h2><i class="fas fa-store"></i> SmartPOS</h2>
+        <ul>
+            <li><a href="admin.html"><i class="fas fa-chart-pie"></i> Dashboard</a></li>
+            
+        </ul>
+    </div>
+
+    <!-- MAIN -->
+    <div class="main">
+
+        <div class="dashboard-header">
+            <h2>Refund History</h2>
+        </div>
+
+    
+
+        <!-- SALES SUMMARY -->
+        
+
+        <!-- SALES TABLE -->
+         <div class="refund-history">
+
+<h3>Refund History</h3>
+<div class="search-box">
+<input type="text" id="searchRefund" placeholder="Search cashier, item or date...">
+</div>
+
+<table class="product-table">
+
+<thead>
+<tr>
+<th>Date</th>
+<th>Cashier</th>
+<th>Items</th>
+<th>Refund Amount</th>
+</tr>
+</thead>
+
+<tbody id="refundHistoryTable"></tbody>
+
+</table>
+
+</div>
+        
+                        
+
+        <footer>
+            © 2026 SmartPOS System
+        </footer>
+
+    </div>
+</div>
+
+<script src="refund.js"></script>
+</body>
+</html>

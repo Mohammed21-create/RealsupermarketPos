@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Cashier Login</title>
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+<style>
+
+/* =========================
+   PAGE BACKGROUND
+========================= */
+
+body.login-body{
+margin:0;
+font-family:'Segoe UI',sans-serif;
+height:100vh;
+display:flex;
+justify-content:center;
+align-items:center;
+background:linear-gradient(135deg,#667eea,#764ba2);
+overflow:hidden;
+}
+
+/* floating shapes */
+
+body::before{
+content:"";
+position:absolute;
+width:450px;
+height:450px;
+background:rgba(255,255,255,0.1);
+border-radius:50%;
+top:-120px;
+left:-120px;
+}
+
+body::after{
+content:"";
+position:absolute;
+width:350px;
+height:350px;
+background:rgba(255,255,255,0.08);
+border-radius:50%;
+bottom:-120px;
+right:-120px;
+}
+
+/* =========================
+   LOGIN BOX
+========================= */
+
+.login-container{
+width:350px;
+padding:40px;
+border-radius:16px;
+background:rgba(255,255,255,0.15);
+backdrop-filter:blur(15px);
+-webkit-backdrop-filter:blur(15px);
+box-shadow:0 20px 40px rgba(0,0,0,0.3);
+text-align:center;
+animation:fadeIn .6s ease;
+}
+
+/* =========================
+   LOGO
+========================= */
+
+.logo{
+font-size:30px;
+color:white;
+margin-bottom:15px;
+}
+
+.logo h2{
+font-size: 24px;
+}
+
+/* =========================
+   INPUT GROUP
+========================= */
+
+.input-group{
+position:relative;
+margin-bottom:18px;
+}
+
+.input-group i{
+position:absolute;
+left:12px;
+top:50%;
+transform:translateY(-50%);
+color:#ddd;
+}
+
+.input-group input{
+width:90%;
+padding:12px 12px 12px 38px;
+border:none;
+border-radius:8px;
+background:rgba(255,255,255,0.2);
+color:white;
+font-size:14px;
+outline:none;
+}
+
+.input-group input::placeholder{
+color:#eee;
+}
+
+.input-group input:focus{
+background:rgba(255,255,255,0.3);
+}
+
+/* =========================
+   BUTTON
+========================= */
+
+button{
+width:100%;
+padding:12px;
+border:none;
+border-radius:8px;
+font-size:15px;
+font-weight:600;
+cursor:pointer;
+background:linear-gradient(135deg,#ff7e5f,#feb47b);
+color:white;
+transition:.3s;
+}
+
+button:hover{
+transform:translateY(-2px);
+box-shadow:0 8px 20px rgba(0,0,0,0.3);
+}
+
+/* =========================
+   ERROR MESSAGE
+========================= */
+
+#errorMsg{
+margin-top:10px;
+font-size:13px;
+color:#ff4d4d;
+}
+
+/* =========================
+   FOOTER
+========================= */
+
+.footer{
+margin-top:15px;
+font-size:12px;
+color:#eee;
+}
+
+/* =========================
+   ANIMATION
+========================= */
+
+@keyframes fadeIn{
+from{
+opacity:0;
+transform:translateY(-20px);
+}
+to{
+opacity:1;
+transform:translateY(0);
+}
+}
+
+/* =========================
+   MOBILE RESPONSIVE
+========================= */
+
+@media(max-width:420px){
+
+.login-container{
+width:85%;
+padding:30px;
+}
+
+}
+
+</style>
+
+</head>
+
+<body class="login-body">
+
+<div class="login-container">
+
+<div class="logo">
+<i class="fas fa-cash-register"></i>
+<h2>SmartPos Login</h2>
+</div>
+
+<div class="input-group">
+<i class="fas fa-user"></i>
+<input type="text" id="username" placeholder="Username">
+</div>
+
+<div class="input-group">
+<i class="fas fa-lock"></i>
+<input type="password" id="password" placeholder="Password">
+</div>
+
+<button onclick="loginCashier()">Login</button>
+
+<p id="errorMsg" style="display:none;">
+Invalid Username or Password
+</p>
+
+<div class="footer">
+SmartPOS System © 2026
+</div>
+
+</div>
+
+<script src="cashier-auth.js"></script>
+
+</body>
+</html>

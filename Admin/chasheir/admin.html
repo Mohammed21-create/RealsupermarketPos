@@ -1,0 +1,1070 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin Dashboard - SmartPOS Pro</title>
+
+<link rel="stylesheet" href="admin24.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<style>
+
+    /* ═══════════════════════════════════════════
+   SMARTPOS — ADMIN DASHBOARD  |  admin2.css
+   ═══════════════════════════════════════════ */
+
+@import url('https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap');
+
+/* ── CSS VARIABLES ── */
+:root {
+  --bg:        linear-gradient(135deg,#667eea,#764ba2);
+  --surface:   #264ebb;
+  --surface2:  #173fdf;
+  --surface3:  #242840;
+  --border:    #2a2e45;
+  --accent:    #f5c842;
+  --accent2:   white;
+  --green:     #3ddc84;
+  --red:       red;
+  --blue:      #4d9fff;
+  --momo:      #f5a623;
+  --text:      white;
+  --text2:     white;
+  --text3:     white;
+  --radius:    12px;
+  --radius-sm: 8px;
+}
+
+
+
+
+
+
+
+/* ════════════════════════════════════════════
+   RESET & BASE
+   ════════════════════════════════════════════ */
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: 'DM Sans', sans-serif;
+  background: linear-gradient(135deg,#667eea,#764ba2);
+  color: var(--text);
+  min-height: 100vh;
+}
+
+input, select, button, textarea { font-family: 'DM Sans', sans-serif; }
+
+a { text-decoration: none; color: inherit; }
+
+/* ════════════════════════════════════════════
+   DASHBOARD LAYOUT  (.dashboard-layout)
+   3-column: sidebar | main | right aside
+   ════════════════════════════════════════════ */
+.dashboard-layout {
+  display: grid;
+  grid-template-columns: 220px 1fr 240px;
+  min-height: 100vh;
+}
+
+/* ════════════════════════════════════════════
+   LEFT SIDEBAR  (aside.admin-container > .sidebar)
+   ════════════════════════════════════════════ */
+aside.admin-container {
+  background: var(--surface);
+  border-right: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow-y: auto;
+}
+
+aside.admin-container::-webkit-scrollbar { width: 3px; }
+aside.admin-container::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+
+.sidebar {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  padding-bottom: 16px;
+}
+
+/* Brand / logo */
+.sidebar h2 {
+  font-family: 'Syne', sans-serif;
+  font-weight: 800;
+  font-size: 13px;
+  color: var(--accent);
+  padding: 18px 16px;
+  border-bottom: 1px solid var(--border);
+  line-height: 1.4;
+}
+
+/* Nav list */
+.sidebar ul {
+  list-style: none;
+  padding: 10px 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.sidebar ul li a {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 12px;
+  border-radius: var(--radius-sm);
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text2);
+  transition: all 0.15s;
+}
+
+.sidebar ul li a:hover {
+  background: var(--surface2);
+  color: var(--text);
+}
+
+.sidebar ul li a.active {
+  background: var(--accent);
+  color: #0d0f14;
+  font-weight: 700;
+}
+
+.sidebar ul li a.active i { color: #0d0f14; }
+
+.sidebar ul li a i {
+  font-size: 13px;
+  width: 16px;
+  text-align: center;
+  color: var(--text3);
+}
+
+/* Sidebar stat cards */
+.sidebar .card {
+  margin: 6px 10px 0;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 12px 14px;
+  transition: border-color 0.15s;
+}
+
+.sidebar .card:hover { border-color: var(--accent); }
+
+.sidebar .card h3 {
+  font-size: 10px;
+  color: var(--text3);
+  text-transform: uppercase;
+  letter-spacing: 0.7px;
+  font-weight: 600;
+  margin-bottom: 5px;
+}
+
+.sidebar .card h2 {
+  font-family: 'DM Mono', monospace;
+  font-size: 18px;
+  font-weight: 500;
+  color: var(--accent);
+}
+
+/* ════════════════════════════════════════════
+   MAIN COLUMN  (.main)
+   ════════════════════════════════════════════ */
+.main {
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  background: var(--bg);
+}
+
+.main::-webkit-scrollbar { width: 4px; }
+.main::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+
+/* ════════════════════════════════════════════
+   DASHBOARD HEADER  (.dashboard-header)
+   ════════════════════════════════════════════ */
+.dashboard-header {
+  display: flex;
+  align-items: center;
+  padding: 0 24px;
+  height: 56px;
+  background: blue;
+  border-bottom: 1px solid var(--border);
+  gap: 16px;
+  flex-shrink: 0;
+  position: sticky;
+  top: 0;
+  z-index: 50;
+}
+
+/* Header left group */
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex: 1;
+}
+
+/* Menu toggle button */
+.menu-toggle {
+  background: none;
+  border: 1px solid var(--border);
+  color: var(--text2);
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  transition: all 0.15s;
+}
+
+.menu-toggle:hover { border-color: var(--accent); color: var(--accent); }
+
+/* Brand name in header */
+.header-left h2 {
+  font-family: 'Syne', sans-serif;
+  font-weight: 800;
+  font-size: 16px;
+  color: var(--accent);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  white-space: nowrap;
+}
+
+.header-left h2 i { font-size: 14px; }
+
+/* Admin info */
+.admin-info {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 4px 12px;
+  font-size: 12px;
+  color: var(--text2);
+}
+
+.admin-icon { font-size: 14px; color: var(--accent); }
+
+/* Logout button */
+.logout-btn {
+  background: none;
+  border: 1px solid var(--border);
+  color: var(--text3);
+  font-size: 12px;
+  padding: 5px 13px;
+  border-radius: 6px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  transition: all 0.15s;
+}
+
+.logout-btn:hover { border-color: var(--red); color: var(--red); }
+
+/* Header right group */
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+/* DateTime */
+.datetime {
+  font-family: 'DM Mono', monospace;
+  font-size: 12px;
+  color: var(--text2);
+  white-space: nowrap;
+}
+
+/* Notification area */
+.notification-area {
+  position: relative;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+}
+
+.notification-bell {
+  font-size: 16px;
+  color: var(--text2);
+  transition: color 0.15s;
+}
+
+.notification-bell:hover { color: var(--accent); }
+
+.badge {
+  position: absolute;
+  top: -6px;
+  right: -8px;
+  background: var(--red);
+  color: #fff;
+  font-size: 10px;
+  font-weight: 700;
+  padding: 1px 5px;
+  border-radius: 20px;
+  font-family: 'DM Mono', monospace;
+  min-width: 16px;
+  text-align: center;
+}
+
+/* Notification dropdown */
+.notification-dropdown {
+  display: none;
+  position: absolute;
+  top: 28px;
+  right: 0;
+  width: 260px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 10px;
+  z-index: 100;
+  font-size: 12px;
+  color: var(--text2);
+  box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+}
+
+.notification-area:hover .notification-dropdown { display: block; }
+
+/* Header tool icons */
+.header-tools {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.tool-icon {
+  width: 34px;
+  height: 34px;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: 9px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 14px;
+  color: var(--text2);
+  transition: all 0.15s;
+}
+
+.tool-icon:hover { border-color: var(--accent); color: var(--accent); background: rgba(245,200,66,0.08); }
+
+/* ════════════════════════════════════════════
+   DROPDOWN PANELS  (.dropdown-panel)
+   Restock AI & Cashier Leaderboard
+   ════════════════════════════════════════════ */
+.dropdown-panel {
+  display: none;
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  padding: 16px 24px;
+  animation: slideDown 0.2s ease;
+}
+
+.dropdown-panel.open { display: block; }
+
+@keyframes slideDown {
+  from { opacity: 0; transform: translateY(-8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.dropdown-panel h3 {
+  font-family: 'Syne', sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  margin-bottom: 12px;
+  color: var(--text);
+}
+
+#restockAI,
+#demandPrediction,
+#cashierLeaderboard {
+  font-size: 13px;
+  color: black;
+  line-height: 1.7;
+}
+
+/* ════════════════════════════════════════════
+   STATS SECTION  (section.stats)
+   ════════════════════════════════════════════ */
+.stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 12px;
+  padding: 20px 24px;
+  border-bottom: 1px solid var(--border);
+}
+
+/* Generic card used in stats, sidebar, live monitor */
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 16px 18px;
+  transition: border-color 0.15s, transform 0.15s;
+}
+
+.card:hover { border-color: var(--accent); transform: translateY(-2px); }
+
+.card h3 {
+  font-size: 11px;
+  color: var(--text3);
+  text-transform: uppercase;
+  letter-spacing: 0.7px;
+  font-weight: 600;
+  margin-bottom: 7px;
+}
+
+.card p,
+.card h2 {
+  font-family: 'DM Mono', monospace;
+  font-size: 20px;
+  font-weight: 500;
+  color: var(--text);
+}
+
+/* Warning card */
+.card.warning {
+  border-color: rgba(255,107,53,0.35);
+  background: rgba(255,107,53,0.06);
+}
+
+.card.warning h3 { color: var(--accent2); }
+.card.warning p,
+.card.warning h2 { color: var(--accent2); }
+
+/* ════════════════════════════════════════════
+   LIVE MONITOR  (section.live-monitor)
+   ════════════════════════════════════════════ */
+.live-monitor {
+  padding: 20px 24px;
+  border-bottom: 1px solid var(--border);
+}
+
+.live-monitor > h3 {
+  font-family: 'Syne', sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  margin-bottom: 14px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--text);
+}
+
+.live-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+}
+
+.live-card {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 16px 18px;
+  transition: border-color 0.15s;
+}
+
+.live-card:hover { border-color: var(--green); }
+
+.live-card h4 {
+  font-size: 11px;
+  color: var(--text3);
+  text-transform: uppercase;
+  letter-spacing: 0.7px;
+  font-weight: 600;
+  margin-bottom: 7px;
+}
+
+.live-card h2 {
+  font-family: 'DM Mono', monospace;
+  font-size: 22px;
+  font-weight: 500;
+  color: var(--green);
+}
+
+/* ════════════════════════════════════════════
+   CHARTS SECTION  (section.charts)
+   ════════════════════════════════════════════ */
+.charts {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr;
+  gap: 14px;
+  padding: 20px 24px;
+  border-bottom: 1px solid var(--border);
+}
+
+.chart-box {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  min-height: 240px;
+}
+
+.chart-box h3 {
+  font-family: 'Syne', sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text2);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.chart-box canvas {
+  flex: 1;
+  max-height: 200px;
+}
+
+/* ════════════════════════════════════════════
+   AI INSIGHTS  (section.ai-panel)
+   ════════════════════════════════════════════ */
+.ai-panel {
+  padding: 20px 24px;
+  border-bottom: 1px solid var(--border);
+}
+
+.ai-panel > h3 {
+  font-family: 'Syne', sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  margin-bottom: 14px;
+  color: var(--text);
+}
+
+.ai-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+}
+
+.ai-card {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 16px 18px;
+  transition: border-color 0.15s;
+}
+
+.ai-card:hover { border-color: var(--blue); }
+
+.ai-card h4 {
+  font-size: 11px;
+  color: var(--text3);
+  text-transform: uppercase;
+  letter-spacing: 0.7px;
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+
+.ai-card p {
+  font-size: 13px;
+  color: var(--text2);
+  line-height: 1.5;
+}
+
+.ai-card.warning {
+  border-color: rgba(255,77,109,0.3);
+  background: rgba(255,77,109,0.05);
+}
+
+.ai-card.warning h4 { color: var(--red); }
+.ai-card.warning p  { color: var(--red); }
+
+/* ════════════════════════════════════════════
+   FOOTER
+   ════════════════════════════════════════════ */
+footer {
+  background: blue;
+  border-top: 1px solid var(--border);
+  padding: 12px 24px;
+  font-size: 11px;
+  color: white;
+  text-align: center;
+  margin-top: auto;
+}
+
+/* ════════════════════════════════════════════
+   RIGHT ASIDE  (aside.live-monitor1)
+   ════════════════════════════════════════════ */
+aside.live-monitor1 {
+  background: var(--surface);
+  border-left: 1px solid var(--border);
+  overflow-y: auto;
+  position: sticky;
+  top: 0;
+  height: 100vh;
+}
+
+aside.live-monitor1::-webkit-scrollbar { width: 3px; }
+aside.live-monitor1::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+
+.live-grid1 {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  padding: 0;
+}
+
+/* Right sidebar cards */
+.live-card1 {
+  padding: 16px 18px;
+  border-bottom: 1px solid var(--border);
+  transition: background 0.15s;
+}
+
+.live-card1:hover { background: var(--surface2); }
+
+.live-card1 h3 {
+  font-size: 10px;
+  color: var(--text3);
+  text-transform: uppercase;
+  letter-spacing: 0.7px;
+  font-weight: 600;
+  margin-bottom: 5px;
+}
+
+.live-card1 p {
+  font-family: 'DM Mono', monospace;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text);
+  margin-bottom: 3px;
+}
+
+.live-card1 small {
+  font-family: 'DM Mono', monospace;
+  font-size: 11px;
+  color: var(--text3);
+}
+
+.live-card1 small span {
+  color: var(--green);
+  font-weight: 600;
+}
+
+/* Card inside right aside (.card reuse) */
+aside.live-monitor1 .card {
+  margin: 0;
+  border-radius: 0;
+  border-left: none;
+  border-right: none;
+  border-top: none;
+  border-bottom: 1px solid var(--border);
+}
+
+aside.live-monitor1 .card h3 {
+  font-size: 10px;
+  color: var(--text3);
+  text-transform: uppercase;
+  letter-spacing: 0.7px;
+}
+
+aside.live-monitor1 .card h2 {
+  font-family: 'DM Mono', monospace;
+  font-size: 18px;
+  color: var(--blue);
+}
+
+/* ════════════════════════════════════════════
+   SCROLLBAR (global)
+   ════════════════════════════════════════════ */
+::-webkit-scrollbar       { width: 4px; height: 4px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+
+/* ════════════════════════════════════════════
+   RESPONSIVE  (tablet / mobile)
+   ════════════════════════════════════════════ */
+@media (max-width: 1200px) {
+  .dashboard-layout {
+    grid-template-columns: 200px 1fr;
+  }
+
+  aside.live-monitor1 {
+    display: none;
+  }
+
+  .charts {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .ai-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 860px) {
+  .dashboard-layout {
+    grid-template-columns: 1fr;
+  }
+
+  aside.admin-container {
+    display: none;
+  }
+
+  .stats {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .live-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .charts {
+    grid-template-columns: 1fr;
+  }
+
+  .ai-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .header-left h2 { display: none; }
+}
+
+@media (max-width: 520px) {
+  .stats      { grid-template-columns: 1fr; }
+  .ai-grid    { grid-template-columns: 1fr; }
+  .dashboard-header { padding: 0 14px; gap: 10px; }
+}
+
+
+
+/* dropdown panels */
+.dropdown-panel{
+position:absolute;
+top:70px;
+right:20px;
+width:300px;
+background:white;
+color:black;
+border-radius:10px;
+box-shadow:0 4px 12px rgba(0,0,0,0.3);
+padding:15px;
+display:none;
+z-index:1000;
+max-height:350px;
+overflow-y:auto;
+}
+
+/* show panel */
+.dropdown-panel.show{
+display:block;
+}
+
+</style>
+</head>
+
+<body>
+
+  
+    <div class="dashboard-layout">
+        
+    
+
+<aside class="admin-container">
+    <div class="sidebar">
+        <h2> Supermarket Admin Dashboard</h2>
+        <ul>
+            <li><a href="admin.html" class="active"><i class="fas fa-chart-pie"></i> Dashboard</a></li>
+            <li><a href="product.html"><i class="fas fa-box"></i> Products</a></li>
+            
+            <li><a href="sales.html"><i class="fas fa-receipt"></i> Sales</a></li>
+            
+            
+            <li><a href="cashier.html"><i class="fas fa-users"></i> Cashiers Activities</a></li>
+            <li><a href="settings.html"><i class="fas fa-cog"></i> Settings</a></li>
+            
+        </ul>
+        <div class="card">
+<h3>Total Items Sold</h3>
+<h2 id="totalItemsSold">0</h2>
+</div>
+<div class="card">
+<h3>Profit Margin</h3>
+<h2 id="profitMargin">0%</h2>
+</div>
+<div class="card">
+<h3>🧠 Inventory Health</h3>
+<h2 id="inventoryHealth">0%</h2>
+</div>
+
+        
+    </aside>
+
+    <!-- MAIN -->
+    <div class="main">
+
+        <!-- HEADER -->
+         
+        <header class="dashboard-header">
+            <div class="header-left">
+<button id="menuToggle" class="menu-toggle">
+<i class="fas fa-bars"></i></button>
+
+        <h2><i class="fas fa-store"></i> SmartPOS Supermarket</h2>
+
+        <div class="admin-info">
+            <i class="fas fa-user-circle admin-icon"></i>
+            <span id="loggedUser"></span>
+        </div>
+
+        <button class="logout-btn" onclick="logoutCashier()">
+            <i class="fas fa-sign-out-alt"></i> Logout
+        </button>
+            </div>
+    
+            <div class="header-right">
+                <div id="adminDateTime" class="datetime"></div>
+            
+
+                <div class="notification-area">
+                    <i class="fas fa-bell notification-bell"></i>
+                    <span id="notificationBadge" class="badge">0</span>
+                    <div id="notificationDropdown" class="notification-dropdown"></div>
+                </div>
+            </div>
+
+            <div class="header-tools">
+
+<!-- Cashier Leaderboard Icon -->
+<div class="tool-icon" id="cashierIcon">
+<i class="fas fa-trophy"></i>
+</div>
+
+<!-- Restock AI Icon -->
+<div class="tool-icon" id="restockIcon">
+<i class="fas fa-robot"></i>
+</div>
+
+</div>
+        </header>
+        <div id="restockPanel" class="dropdown-panel">
+
+<h3>🤖 Smart Restock AI</h3>
+
+<div id="restockAI"></div>
+<div id="demandPrediction"></div>
+
+</div>
+<div id="cashierPanel" class="dropdown-panel">
+
+<h3>🏆 Cashier Leaderboard</h3>
+
+<div id="cashierLeaderboard"></div>
+
+</div>
+
+
+        <!-- ================= STATS ================= -->
+        <!-- ================= STATS ================= -->
+         <section class="stats">
+          
+<div class="card">
+<h3>Today's Sales</h3>
+<p>GH₵ <span id="todaySales">0.00</span></p>
+</div>
+
+<div class="card">
+<h3>Average Transaction</h3>
+<p>GH₵ <span id="averageSale">0.00</span></p>
+</div>
+
+<div class="card">
+<h3>Total Transactions</h3>
+<p id="totalSales">0</p>
+</div>
+
+<div class="card">
+<h3>Total Units Sold</h3>
+<p id="unitSalesCount">0</p>
+</div>
+
+<div class="card">
+<h3>Total Bulk Sold</h3>
+<p id="bulkSalesCount">0</p>
+</div>
+
+<div class="card">
+<h3>Inventory Value</h3>
+<p>GH₵ <span id="inventoryValue">0.00</span></p>
+</div>
+
+<div class="card warning">
+<h3>Low Stock</h3>
+<p id="lowStockCount">0</p>
+</div>
+
+<div class="card">
+<h3>Total Products</h3>
+<p id="totalProducts">0</p>
+</div>  
+
+  <div class="card">
+  <h3>Cost of Goods Sold</h3>
+  <p id="totalCogs">GHS 0.00</p>
+</div>
+
+
+
+         </section>
+         <!--live monitor-->
+         <section class="live-monitor">
+           
+<h3>🔴 Live Sales Monitor</h3>
+
+<div class="live-grid">
+
+<div class="live-card">
+<h4>Live Revenue</h4>
+<h2>GH₵ <span id="liveRevenue">0.00</span></h2>
+</div>
+
+
+
+<div class="live-card">
+<h4>Transactions Today</h4>
+<h2 id="liveTransactions">0</h2>
+</div>
+
+<div class="live-card">
+<h4> Items Sold Today</h4>
+<h2 id="liveItemsSold">0</h2>
+</div>
+
+</div> 
+  </section>
+
+
+         <!-- Chart section-->
+     <section class="charts">
+            
+<div class="chart-box large">
+<h3>Monthly Sales Overview</h3>
+<canvas id="monthlySalesChart"></canvas>
+</div>
+
+<div class="chart-box">
+<h3>Unit vs Bulk Sales</h3>
+<canvas id="salesTypeChart"></canvas>
+</div>
+
+<div class="chart-box">
+<h3>Stocks Products</h3>
+<canvas id="productChart"></canvas>
+</div>
+     </section>
+     <!--Ai sight-->
+      <section class="ai-panel">
+        
+<h3>🤖 SmartPOS AI Insights</h3>
+
+<div class="ai-grid">
+
+<div class="ai-card">
+<h4>Sales Trend</h4>
+<p id="aiSalesTrend">Analyzing...</p>
+</div>
+
+<div class="ai-card">
+<h4>Trending Product</h4>
+<p id="aiTrendingProduct">Analyzing...</p>
+</div>
+
+<div class="ai-card">
+<h4>Top Cashier</h4>
+<p id="aiTopCashier">Analyzing...</p>
+</div>
+
+<div class="ai-card warning">
+<h4>Risk Alert</h4>
+<p id="aiFraudAlert">Checking...</p>
+</div>
+
+</div>
+ </section>
+     <footer>
+            © 2026 SmartPOS Professional Edition
+        </footer>
+    </div>
+    <!--Right Analytics-->
+    <aside class="live-monitor1">
+        <div class="live-grid1">
+
+<div class="live-card1">
+<h3>Most Profitable Product</h3>
+<p id="bestProfitProduct">-</p>
+<small>Profit GH₵ <span id="bestProfitValue">0.00</span></small>
+</div>
+
+<div class="card">
+<h3>Total Stock</h3>
+<h2 id="totalStock">0</h2>
+</div>
+
+<div class="live-card1">
+<h3>Worst Product</h3>
+<p id="worstProduct">-</p>
+<small>GH₵ <span id="worstProductValue">0.00</span></small>
+</div>
+
+<div class="live-card1">
+<h3>Best Selling Product</h3>
+<p id="topSellingProduct">-</p>
+<small><span id="topSellingQty">0</span> Units</small>
+</div>
+
+<div class="live-card1">
+<h3>Loss Product</h3>
+<p id="lossProduct">-</p>
+<small>Loss GH₵ <span id="lossProductValue">0.00</span></small>
+</div>
+
+<div class="live-card1">
+<h3>Total Revenue</h3>
+<p>GH₵ <span id="totalRevenue">0.00</span></p>
+</div>
+
+<div class="live-card1">
+<h3>Total Profit</h3>
+<p>GH₵ <span id="totalProfit">0.00</span></p>
+</div>
+
+<div class="live-card1">
+<h3>Total Loss</h3>
+<p>GH₵ <span id="totalLoss">0.00</span></p>
+</div>
+
+<div class="live-card1">
+<h3>Net Profit</h3>
+<p>GH₵ <span id="netProfit">0.00</span></p>
+</div>
+
+</div>
+
+    </aside>
+    </div>
+
+<script src="admin.js"></script>
+</body>
+</html>

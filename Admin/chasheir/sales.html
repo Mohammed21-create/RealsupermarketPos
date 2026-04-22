@@ -1,0 +1,1011 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sales - SmartPOS</title>
+
+<link rel="stylesheet" href="admin23.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<style>
+    /* ═══════════════════════════════════════════
+   SMARTPOS — SALES MANAGEMENT  |  sales.css
+   ═══════════════════════════════════════════
+   NOTE: This file extends admin.css.
+   Link both in your HTML:
+     <link rel="stylesheet" href="admin.css">
+     <link rel="stylesheet" href="sales.css">
+   ═══════════════════════════════════════════ */
+
+@import url('https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap');
+
+/* ── CSS VARIABLES ── */
+:root {
+  --bg:        linear-gradient(135deg,#667eea,#764ba2);
+  --surface:   #0c34a0;
+  --surface2:  #1c2030;
+  --surface3:  #242840;
+  --border:    #2a2e45;
+  --accent:    #f5c842;
+  --accent2:   #ff6b35;
+  --green:     #3ddc84;
+  --red:       #ff4d6d;
+  --blue:      #4d9fff;
+  --text:      white;
+  --text2:     white;
+  --text3:     white;
+  --radius:    12px;
+  --radius-sm: 8px;
+}
+
+/* ════════════════════════════════════════════
+   RESET & BASE
+   ════════════════════════════════════════════ */
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: 'DM Sans', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+}
+
+input, select, button, textarea { font-family: 'DM Sans', sans-serif; }
+a { text-decoration: none; color: inherit; }
+
+/* ════════════════════════════════════════════
+   ADMIN CONTAINER  (.admin-container)
+   Two-column: sidebar | main
+   ════════════════════════════════════════════ */
+.admin-container {
+  display: grid;
+  grid-template-columns: 220px 1fr;
+  min-height: 100vh;
+}
+
+/* ════════════════════════════════════════════
+   SIDEBAR  (.sidebar)
+   ════════════════════════════════════════════ */
+.sidebar {
+  background: var(--surface);
+  border-right: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow-y: auto;
+}
+
+.sidebar::-webkit-scrollbar { width: 3px; }
+.sidebar::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+
+/* Brand */
+.sidebar h2 {
+  font-family: 'Syne', sans-serif;
+  font-weight: 800;
+  font-size: 16px;
+  color: var(--accent);
+  padding: 20px 18px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.sidebar h2 i { font-size: 15px; }
+
+/* Nav */
+.sidebar ul {
+  list-style: none;
+  padding: 10px 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.sidebar ul li a {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 12px;
+  border-radius: var(--radius-sm);
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text2);
+  transition: all 0.15s;
+}
+
+.sidebar ul li a i {
+  font-size: 13px;
+  width: 16px;
+  text-align: center;
+  color: var(--text3);
+}
+
+.sidebar ul li a:hover          { background: var(--surface2); color: var(--text); }
+.sidebar ul li.active a         { background: var(--accent); color: #0d0f14; font-weight: 700; }
+.sidebar ul li.active a i       { color: #0d0f14; }
+
+/* ════════════════════════════════════════════
+   MAIN COLUMN  (.main)
+   ════════════════════════════════════════════ */
+.main {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  overflow-y: auto;
+  background: var(--bg);
+}
+
+.main::-webkit-scrollbar { width: 4px; }
+.main::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+
+/* ════════════════════════════════════════════
+   DASHBOARD HEADER  (.dashboard-header)
+   ════════════════════════════════════════════ */
+.dashboard-header {
+  display: flex;
+  align-items: center;
+  padding: 0 24px;
+  height: 56px;
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  flex-shrink: 0;
+  position: sticky;
+  top: 0;
+  z-index: 50;
+}
+
+.dashboard-header h2 {
+  font-family: 'Syne', sans-serif;
+  font-weight: 700;
+  font-size: 17px;
+  color: var(--text);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+/* ════════════════════════════════════════════
+   FILTER SECTION  (.filter-section)
+   ════════════════════════════════════════════ */
+.filter-section {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 24px;
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+}
+
+/* Shared input / select / date style */
+.filter-section select,
+.filter-section input[type="date"],
+.filter-section input[type="text"] {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 8px 12px;
+  color: var(--text);
+  font-size: 13px;
+  outline: none;
+  transition: border-color 0.15s;
+  cursor: pointer;
+}
+
+.filter-section select:focus,
+.filter-section input[type="date"]:focus,
+.filter-section input[type="text"]:focus {
+  border-color: var(--accent);
+}
+
+.filter-section select option { background: var(--surface2); }
+
+/* Apply Filter button */
+.apply-btn {
+  background: var(--accent);
+  color: #0d0f14;
+  border: none;
+  padding: 8px 18px;
+  border-radius: var(--radius-sm);
+  font-size: 13px;
+  font-weight: 700;
+  font-family: 'Syne', sans-serif;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  transition: opacity 0.15s;
+  white-space: nowrap;
+}
+
+.apply-btn:hover { opacity: 0.85; }
+
+/* Export PDF button */
+.filter-section > button {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  color: var(--text2);
+  padding: 8px 16px;
+  border-radius: var(--radius-sm);
+  font-size: 13px;
+  cursor: pointer;
+  transition: all 0.15s;
+  white-space: nowrap;
+}
+
+.filter-section > button:hover {
+  border-color: var(--blue);
+  color: var(--blue);
+}
+
+/* Report search sub-area */
+.report-search {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: nowrap;
+}
+
+.report-search input {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 8px 12px;
+  color: var(--text);
+  font-size: 13px;
+  outline: none;
+  transition: border-color 0.15s;
+  min-width: 240px;
+}
+
+.report-search input::placeholder { color: var(--text3); }
+.report-search input:focus { border-color: var(--accent); }
+
+.report-search button {
+  background: var(--surface3);
+  border: 1px solid var(--border);
+  color: var(--text2);
+  padding: 8px 14px;
+  border-radius: var(--radius-sm);
+  font-size: 13px;
+  cursor: pointer;
+  transition: all 0.15s;
+  white-space: nowrap;
+}
+
+.report-search button:hover { border-color: var(--accent); color: var(--accent); }
+
+/* ════════════════════════════════════════════
+   REPORT MODAL  (.report-modal)
+   ════════════════════════════════════════════ */
+.report-modal {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.75);
+  z-index: 200;
+  align-items: center;
+  justify-content: center;
+  backdrop-filter: blur(4px);
+}
+
+.report-modal.open { display: flex; }
+
+.report-box {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 28px;
+  width: 640px;
+  max-width: 95vw;
+  max-height: 85vh;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  animation: modalIn 0.2s ease;
+}
+
+.report-box::-webkit-scrollbar { width: 3px; }
+.report-box::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+
+@keyframes modalIn {
+  from { opacity: 0; transform: scale(0.95) translateY(10px); }
+  to   { opacity: 1; transform: scale(1)    translateY(0); }
+}
+
+.report-box h2 {
+  font-family: 'Syne', sans-serif;
+  font-size: 17px;
+  font-weight: 700;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--border);
+  color: var(--text);
+}
+
+#reportContent,
+#reportSummary {
+  font-size: 13px;
+  color: var(--text2);
+  line-height: 1.7;
+}
+
+#reportTable table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 12px;
+}
+
+#reportTable thead th {
+  text-align: left;
+  padding: 8px 10px;
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.7px;
+  color: var(--text3);
+  border-bottom: 1px solid var(--border);
+}
+
+#reportTable tbody tr { border-bottom: 1px solid rgba(42,46,69,0.5); }
+#reportTable tbody tr:hover { background: var(--surface2); }
+#reportTable tbody td { padding: 9px 10px; color: var(--text2); }
+
+.report-actions {
+  display: flex;
+  gap: 10px;
+  justify-content: flex-end;
+  padding-top: 4px;
+  border-top: 1px solid var(--border);
+}
+
+.report-actions button {
+  padding: 9px 18px;
+  border-radius: var(--radius-sm);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s;
+  border: none;
+}
+
+.report-actions button:first-child {
+  background: var(--accent);
+  color: #0d0f14;
+  font-family: 'Syne', sans-serif;
+}
+
+.report-actions button:first-child:hover { opacity: 0.85; }
+
+.report-actions button:last-child {
+  background: none;
+  border: 1px solid var(--border);
+  color: var(--text2);
+}
+
+.report-actions button:last-child:hover { border-color: var(--red); color: var(--red); }
+
+/* ════════════════════════════════════════════
+   STATS CARDS  (.stats / .card1)
+   ════════════════════════════════════════════ */
+.stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 12px;
+  padding: 18px 24px;
+  border-bottom: 1px solid var(--border);
+}
+
+.card1 {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 16px 18px;
+  transition: border-color 0.15s, transform 0.15s;
+}
+
+.card1:hover { border-color: var(--accent); transform: translateY(-2px); }
+
+.card1 h3 {
+  font-size: 11px;
+  color: var(--text3);
+  text-transform: uppercase;
+  letter-spacing: 0.7px;
+  font-weight: 600;
+  margin-bottom: 7px;
+}
+
+.card1 p {
+  font-family: 'DM Mono', monospace;
+  font-size: 18px;
+  font-weight: 500;
+  color: var(--accent);
+}
+
+/* Alternate accent colors by position */
+.card1:nth-child(2) p { color: var(--green); }
+.card1:nth-child(3) p { color: var(--blue); }
+.card1:nth-child(4) p { color: var(--text); }
+.card1:nth-child(5) p { color: var(--accent); }
+.card1:nth-child(6) p { color: var(--momo); }
+.card1:nth-child(7) p { color: var(--accent2); }
+.card1:nth-child(8) p { color: var(--green); }
+
+/* ════════════════════════════════════════════
+   SALES ANALYZER  (.sales-analyzer)
+   ════════════════════════════════════════════ */
+.sales-analyzer {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 24px;
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+}
+
+.sales-analyzer h3 {
+  font-family: 'Syne', sans-serif;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text2);
+  margin-right: 4px;
+}
+
+.sales-analyzer select,
+.sales-analyzer input[type="date"] {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 8px 12px;
+  color: var(--text);
+  font-size: 13px;
+  outline: none;
+  transition: border-color 0.15s;
+  cursor: pointer;
+}
+
+.sales-analyzer select:focus,
+.sales-analyzer input[type="date"]:focus { border-color: var(--accent); }
+
+.sales-analyzer button {
+  background: var(--blue);
+  color: #fff;
+  border: none;
+  padding: 8px 18px;
+  border-radius: var(--radius-sm);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: opacity 0.15s;
+}
+
+.sales-analyzer button:hover { opacity: 0.85; }
+
+/* ════════════════════════════════════════════
+   SEARCH BOX  (.search-box)
+   ════════════════════════════════════════════ */
+.search-box {
+  padding: 12px 24px;
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+}
+
+input#searchTransaction {
+  width: 100%;
+  max-width: 420px;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 9px 14px;
+  color: var(--text);
+  font-size: 13px;
+  outline: none;
+  transition: border-color 0.15s;
+}
+
+input#searchTransaction::placeholder { color: var(--text3); }
+input#searchTransaction:focus { border-color: var(--accent); }
+
+/* ════════════════════════════════════════════
+   SALES TABLE  (.product-table)
+   ════════════════════════════════════════════ */
+.product-table {
+  margin: 20px 24px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+
+.product-table > h3 {
+  font-family: 'Syne', sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  padding: 14px 18px;
+  border-bottom: 1px solid var(--border);
+  color: var(--text);
+}
+
+.product-table table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+
+.product-table thead tr { background: var(--surface2); }
+
+.product-table thead th {
+  text-align: left;
+  padding: 11px 14px;
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  color: var(--text3);
+  border-bottom: 1px solid var(--border);
+  white-space: nowrap;
+}
+
+.product-table tbody tr {
+  border-bottom: 1px solid rgba(42, 46, 69, 0.55);
+  transition: background 0.1s;
+  cursor: pointer;
+}
+
+.product-table tbody tr:last-child { border-bottom: none; }
+.product-table tbody tr:hover { background: var(--surface2); }
+
+.product-table tbody td {
+  padding: 11px 14px;
+  vertical-align: middle;
+  color: var(--text);
+}
+
+/* Numeric columns in mono */
+.product-table tbody td:nth-child(4),
+.product-table tbody td:nth-child(5),
+.product-table tbody td:nth-child(6),
+.product-table tbody td:nth-child(7),
+.product-table tbody td:nth-child(8) {
+  font-family: 'DM Mono', monospace;
+  color: var(--text2);
+}
+
+/* Total column highlight */
+.product-table tbody td:nth-child(6) { color: var(--accent); }
+
+/* Cash column */
+.product-table tbody td:nth-child(7) { color: var(--green); }
+
+/* Balance / change column */
+.product-table tbody td:nth-child(8) { color: var(--blue); }
+
+/* ════════════════════════════════════════════
+   TRANSACTION DETAILS MODAL  (#transactionModal)
+   ════════════════════════════════════════════ */
+.modal {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.75);
+  z-index: 200;
+  align-items: center;
+  justify-content: center;
+  backdrop-filter: blur(4px);
+}
+
+.modal.open { display: flex; }
+
+.modal-content {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 28px;
+  width: 480px;
+  max-width: 94vw;
+  max-height: 85vh;
+  overflow-y: auto;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  animation: modalIn 0.2s ease;
+}
+
+.modal-content::-webkit-scrollbar { width: 3px; }
+.modal-content::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+
+@keyframes modalIn {
+  from { opacity: 0; transform: scale(0.95) translateY(10px); }
+  to   { opacity: 1; transform: scale(1)    translateY(0); }
+}
+
+.modal-content h3 {
+  font-family: 'Syne', sans-serif;
+  font-size: 16px;
+  font-weight: 700;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--border);
+  color: var(--text);
+}
+
+/* Close button */
+.close-btn {
+  position: absolute;
+  top: 18px;
+  right: 20px;
+  font-size: 22px;
+  color: var(--text3);
+  cursor: pointer;
+  line-height: 1;
+  transition: color 0.15s;
+}
+
+.close-btn:hover { color: var(--red); }
+
+/* Transaction details content */
+#transactionDetails {
+  font-size: 13px;
+  color: var(--text2);
+  line-height: 1.8;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+#transactionDetails p {
+  display: flex;
+  justify-content: space-between;
+  padding: 5px 0;
+  border-bottom: 1px solid rgba(42,46,69,0.4);
+  font-family: 'DM Mono', monospace;
+}
+
+#transactionDetails p span:first-child {
+  color: var(--text3);
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  font-family: 'DM Sans', sans-serif;
+}
+
+#transactionDetails p span:last-child { color: var(--text); }
+
+/* Print receipt button */
+.print-btn {
+  background: var(--blue);
+  color: #fff;
+  border: none;
+  padding: 11px;
+  border-radius: var(--radius-sm);
+  font-size: 13px;
+  font-weight: 700;
+  font-family: 'Syne', sans-serif;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: opacity 0.15s;
+}
+
+.print-btn:hover { opacity: 0.85; }
+
+/* ════════════════════════════════════════════
+   FOOTER
+   ════════════════════════════════════════════ */
+footer {
+  background: var(--surface);
+  border-top: 1px solid var(--border);
+  padding: 12px 24px;
+  font-size: 11px;
+  color: var(--text3);
+  text-align: center;
+  margin-top: auto;
+}
+
+/* ════════════════════════════════════════════
+   SCROLLBAR (global)
+   ════════════════════════════════════════════ */
+::-webkit-scrollbar       { width: 4px; height: 4px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+
+/* ════════════════════════════════════════════
+   RESPONSIVE
+   ════════════════════════════════════════════ */
+@media (max-width: 900px) {
+  .admin-container {
+    grid-template-columns: 1fr;
+  }
+
+  .sidebar {
+    display: none;
+  }
+
+  .filter-section {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .filter-section select,
+  .filter-section input,
+  .filter-section button,
+  .apply-btn {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .report-search { flex-direction: column; }
+  .report-search input { min-width: unset; width: 100%; }
+
+  .stats {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .product-table {
+    margin: 14px 12px;
+    overflow-x: auto;
+  }
+}
+
+@media (max-width: 520px) {
+  .stats { grid-template-columns: 1fr; }
+  .dashboard-header { padding: 0 14px; }
+  .filter-section   { padding: 12px 14px; }
+}
+
+/* ════════════════════════════════════════════
+   PRINT
+   ════════════════════════════════════════════ */
+@media print {
+  .sidebar,
+  .filter-section,
+  .search-box,
+  .sales-analyzer,
+  .dashboard-header,
+  footer { display: none !important; }
+
+  .admin-container { grid-template-columns: 1fr; }
+  .product-table   { margin: 0; border: none; }
+  body             { background: #fff; color: #000; }
+}
+</style>
+</head>
+
+<body>
+
+<div class="admin-container">
+
+    <!-- SIDEBAR -->
+    <div class="sidebar">
+        <h2><i class="fas fa-store"></i> SmartPOS</h2>
+        <ul>
+            <li><a href="admin.html"><i class="fas fa-chart-pie"></i> Dashboard</a></li>
+            <li><a href="product.html"><i class="fas fa-box"></i> Products</a></li>
+            <li class="active"><a href="sales.html"><i class="fas fa-receipt"></i> Sales</a></li>
+            
+        </ul>
+    </div>
+
+    <!-- MAIN -->
+    <div class="main">
+
+        <div class="dashboard-header">
+            <h2>Sales Management</h2>
+        </div>
+
+        <!-- FILTER SECTION -->
+        <div class="filter-section">
+
+            <select id="filterType">
+                <option value="all">All Transactions</option>
+                <option value="daily">Today</option>
+                <option value="weekly">This Week</option>
+                <option value="monthly">This Month</option>
+                <option value="yearly">This Year</option>
+                <option value="custom">Custom Range</option>
+            </select>
+
+            <input type="date" id="startDate">
+            <input type="date" id="endDate">
+
+            <button onclick="applyFilter()" class="apply-btn">
+                <i class="fas fa-filter"></i> Apply Filter
+            </button>
+            <select id="groupType" onchange="groupSales()">
+<option value="none">Normal View</option>
+<option value="day">Group by Day</option>
+<option value="month">Group by Month</option>
+<option value="year">Group by Year</option>
+</select>
+
+            
+
+<select id="reportType">
+<option value="daily">Daily Report</option>
+<option value="monthly">Monthly Report</option>
+<option value="yearly">Yearly Report</option>
+</select>
+
+<button onclick="exportPDF()">Export PDF</button>
+
+
+<div class="report-search">
+
+<input 
+type="text" 
+id="searchReport" 
+placeholder="Search Monday, March, 2026, John, Milk"
+/>
+
+<button onclick="searchSalesReport()">Search</button>
+
+</div>
+
+
+<!-- REPORT MODAL -->
+
+<div id="reportModal" class="report-modal">
+
+<div class="report-box">
+
+<h2>Sales Report</h2>
+
+<div id="reportContent"></div>
+<div id="reportSummary"></div>
+<div id="reportTable"></div>
+
+<div class="report-actions">
+
+<button onclick="exportReportPDF1()">Export PDF</button>
+<button onclick="closeReport()">Close</button>
+
+</div>
+
+</div>
+
+</div>
+        
+        </div>
+
+        <!-- SALES SUMMARY -->
+        <div class="stats">
+
+            <div class="card1">
+                <h3>Total Transactions</h3>
+                <p>GH₵ <span id="aTransactions">0.00</span></p>
+            </div>
+
+            <div class="card1">
+                <h3>Total Profit</h3>
+                <p>GH₵ <span id="aProfit">0.00</span></p>
+            </div>
+
+            
+
+            <div class="card1">
+                <h3>Total Revenue</h3>
+                <p>GH₵ <span id="aRevenue">0.00</span></p>
+            </div>
+
+            
+
+            <div class="card1">
+<h3>Today's Revenue</h3>
+<p>GH₵ <span id="todayRevenue">0.00</span></p>
+</div>
+
+<div class="card1">
+<h3>Weekly Revenue</h3>
+<p>GH₵ <span id="weekRevenue">0.00</span></p>
+</div>
+
+<div class="card1">
+<h3>Yearly Revenue</h3>
+<p>GH₵ <span id="yearRevenue">0.00</span></p>
+</div>
+<div class="card1">
+    <h3>Monthly Revenue</h3>
+    <p>GH₵ <span id="monthRevenue">0.00</span></p>
+</div>
+
+        </div>
+        
+
+<div class="sales-analyzer">
+
+<h3>Sales Analyzer</h3>
+
+<select id="analysisType">
+<option value="day">Day</option>
+<option value="week">Week</option>
+<option value="month">Month</option>
+<option value="year">Year</option>
+</select>
+
+<input type="date" id="analysisDate">
+
+<button onclick="analyzeSales()">Search</button>
+
+</div>
+        
+        <div class="search-box">
+
+<input 
+type="text"
+id="searchTransaction"
+placeholder="Search product, date, or cashier..."
+onkeyup="searchTransactions()"
+class="search-box"
+/>
+
+</div>
+
+
+
+
+
+
+
+        <!-- SALES TABLE -->
+        <div class="product-table">
+            <h3>Transactions List</h3>
+
+            <table class="product-table">
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Time</th>
+                        <th>Items</th>
+                        <th>Unit Qty</th>
+                        <th>Bulk Qty</th>
+                        <th>Total (GH₵)</th>
+                        <th>Cash</th>
+                        <th>Balance</th>
+                        
+                    </tr>
+                </thead>
+
+                <tbody id="salesTableBody"></tbody>
+            </table>
+        </div>
+        
+        <!-- TRANSACTION DETAILS MODAL -->
+<div id="transactionModal" class="modal">
+
+  <div class="modal-content">
+
+    <span class="close-btn" onclick="closeTransactionModal()">&times;</span>
+
+    <h3>Transaction Details</h3>
+
+    <div id="transactionDetails"></div>
+
+    <button onclick="printReceipt()" class="print-btn">
+      Print Receipt
+    </button>
+
+  </div>
+
+</div>
+
+
+
+
+
+
+        <footer>
+            © 2026 SmartPOS System
+        </footer>
+
+    </div>
+</div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+<script src="sales.js"></script>
+</body>
+</html>

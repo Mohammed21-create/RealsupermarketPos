@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Settings - SmartPOS</title>
+
+<link rel="stylesheet" href="admin4.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<style>
+    /* ═══════════════════════════════════════════
+   SMARTPOS — SETTINGS  |  settings.css
+   ═══════════════════════════════════════════ */
+
+@import url('https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap');
+
+:root {
+  --bg:        linear-gradient(135deg,#667eea,#764ba2);
+  --surface:   #0f3ebe;
+  --surface2:  #1c2030;
+  --surface3:  #242840;
+  --border:    #2a2e45;
+  --accent:    #f5c842;
+  --accent2:   #ff6b35;
+  --green:     #3ddc84;
+  --red:       #ff4d6d;
+  --blue:      #4d9fff;
+  --text:      #e8eaf2;
+  --text2:     white;
+  --text3:     white;
+  --radius:    12px;
+  --radius-sm: 8px;
+}
+
+/* ── RESET ── */
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: 'DM Sans', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+}
+
+input, select, button, textarea { font-family: 'DM Sans', sans-serif; }
+a { text-decoration: none; color: inherit; }
+
+/* ════════════════════════════════════════════
+   LAYOUT  (.admin-container)
+   ════════════════════════════════════════════ */
+.admin-container {
+  display: grid;
+  grid-template-columns: 220px 1fr;
+  min-height: 100vh;
+}
+
+/* ════════════════════════════════════════════
+   SIDEBAR
+   ════════════════════════════════════════════ */
+.sidebar {
+  background: var(--surface);
+  border-right: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow-y: auto;
+}
+
+.sidebar::-webkit-scrollbar { width: 3px; }
+.sidebar::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+
+.sidebar h2 {
+  font-family: 'Syne', sans-serif;
+  font-weight: 800;
+  font-size: 16px;
+  color: var(--accent);
+  padding: 20px 18px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.sidebar h2 i { font-size: 15px; }
+
+.sidebar ul {
+  list-style: none;
+  padding: 10px 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.sidebar ul li a {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 12px;
+  border-radius: var(--radius-sm);
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text2);
+  transition: all 0.15s;
+}
+
+.sidebar ul li a i {
+  font-size: 13px;
+  width: 16px;
+  text-align: center;
+  color: var(--text3);
+}
+
+.sidebar ul li a:hover    { background: var(--surface2); color: var(--text); }
+.sidebar ul li a.active   { background: var(--accent); color: #0d0f14; font-weight: 700; }
+.sidebar ul li a.active i { color: #0d0f14; }
+
+/* ════════════════════════════════════════════
+   MAIN COLUMN
+   ════════════════════════════════════════════ */
+.main {
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  background: var(--bg);
+  min-height: 100vh;
+}
+
+.main::-webkit-scrollbar { width: 4px; }
+.main::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+
+/* ════════════════════════════════════════════
+   PAGE HEADER  (.page-header)
+   ════════════════════════════════════════════ */
+.page-header {
+  padding: 20px 28px 18px;
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  flex-shrink: 0;
+}
+
+.page-header h2 {
+  font-family: 'Syne', sans-serif;
+  font-weight: 700;
+  font-size: 18px;
+  color: var(--text);
+}
+
+.page-header p {
+  font-size: 12px;
+  color: var(--text3);
+  margin-top: 4px;
+}
+
+/* ════════════════════════════════════════════
+   SETTINGS GRID  (.settings-grid)
+   ════════════════════════════════════════════ */
+.settings-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+  gap: 20px;
+  padding: 24px 28px;
+  align-items: start;
+}
+
+/* ════════════════════════════════════════════
+   SETTINGS SECTION  (.settings-section)
+   ════════════════════════════════════════════ */
+.settings-section {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+/* Section title */
+.section-title {
+  font-family: 'Syne', sans-serif;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--text2);
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--border);
+}
+
+.section-title i { color: var(--accent); font-size: 13px; }
+
+/* ════════════════════════════════════════════
+   SETTINGS CARD  (.settings-card)
+   ════════════════════════════════════════════ */
+.settings-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 20px 22px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  transition: border-color 0.15s;
+}
+
+.settings-card:hover { border-color: rgba(245,200,66,0.3); }
+
+/* Card heading */
+.settings-card h4 {
+  font-family: 'Syne', sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--text);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.settings-card h4 i { color: var(--accent); font-size: 13px; }
+
+/* Card sub-heading */
+.settings-card h5 {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+  color: var(--text3);
+}
+
+/* Paragraphs */
+.settings-card p {
+  font-size: 13px;
+  color: var(--text2);
+  line-height: 1.6;
+}
+
+.settings-card p strong {
+  color: var(--text);
+  font-weight: 600;
+  font-family: 'DM Mono', monospace;
+}
+
+/* Divider */
+.settings-card hr {
+  border: none;
+  border-top: 1px solid var(--border);
+}
+
+/* ── Inputs ── */
+.settings-card input[type="text"],
+.settings-card input[type="password"],
+.settings-card input[type="file"] {
+  width: 100%;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 10px 13px;
+  color: var(--text);
+  font-size: 13px;
+  outline: none;
+  transition: border-color 0.15s;
+}
+
+.settings-card input[type="text"]:focus,
+.settings-card input[type="password"]:focus { border-color: var(--accent); }
+
+.settings-card input[type="text"]::placeholder,
+.settings-card input[type="password"]::placeholder { color: var(--text3); }
+
+/* File input */
+.settings-card input[type="file"] {
+  cursor: pointer;
+  color: var(--text2);
+  padding: 8px 12px;
+}
+
+.settings-card input[type="file"]::-webkit-file-upload-button {
+  background: var(--surface3);
+  border: 1px solid var(--border);
+  color: var(--text2);
+  padding: 5px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 12px;
+  margin-right: 10px;
+  transition: all 0.15s;
+}
+
+.settings-card input[type="file"]::-webkit-file-upload-button:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+/* ── Primary button (.primary-btn) ── */
+.primary-btn {
+  background: var(--accent);
+  color: #0d0f14;
+  border: none;
+  padding: 10px 18px;
+  border-radius: var(--radius-sm);
+  font-size: 13px;
+  font-weight: 700;
+  font-family: 'Syne', sans-serif;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  transition: opacity 0.15s;
+  width: 100%;
+}
+
+.primary-btn:hover { opacity: 0.85; }
+
+/* ── Secondary buttons (Download Backup etc.) ── */
+.settings-card > button:not(.primary-btn),
+#downloadBackupBtn {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  color: var(--text2);
+  padding: 9px 16px;
+  border-radius: var(--radius-sm);
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  transition: all 0.15s;
+  width: 100%;
+}
+
+.settings-card > button:not(.primary-btn):hover,
+#downloadBackupBtn:hover {
+  border-color: var(--blue);
+  color: var(--blue);
+}
+
+/* ── Feedback messages ── */
+#passMsg,
+#cashierMsg {
+  font-size: 12px;
+  min-height: 16px;
+  font-family: 'DM Mono', monospace;
+}
+
+#passMsg.success, #cashierMsg.success { color: var(--green); }
+#passMsg.error,   #cashierMsg.error   { color: var(--red); }
+
+/* Inline success/error without class (JS might just set textContent) */
+#passMsg:not(:empty),
+#cashierMsg:not(:empty) { padding: 6px 10px; background: var(--surface2); border-radius: 6px; border: 1px solid var(--border); }
+
+/* ════════════════════════════════════════════
+   CASHIER LIST  (.cashier-list / #cashierList)
+   ════════════════════════════════════════════ */
+.cashier-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.cashier-list li {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 10px 13px;
+  font-size: 13px;
+  color: var(--text2);
+  transition: border-color 0.15s;
+}
+
+.cashier-list li:hover { border-color: var(--accent); }
+
+/* Cashier name text */
+.cashier-list li span {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--text);
+  font-weight: 500;
+}
+
+.cashier-list li span i { color: var(--accent); font-size: 12px; }
+
+/* Delete button inside list item */
+.cashier-list li button,
+.cashier-list .delete-cashier-btn {
+  background: none;
+  border: 1px solid var(--border);
+  color: var(--text3);
+  width: 28px;
+  height: 28px;
+  border-radius: 7px;
+  cursor: pointer;
+  font-size: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.12s;
+  flex-shrink: 0;
+}
+
+.cashier-list li button:hover,
+.cashier-list .delete-cashier-btn:hover {
+  border-color: var(--red);
+  color: var(--red);
+  background: rgba(255,77,109,0.08);
+}
+
+/* ════════════════════════════════════════════
+   SYSTEM INFO VALUES
+   ════════════════════════════════════════════ */
+#lastBackupDate { color: var(--green); font-family: 'DM Mono', monospace; }
+#infoProducts   { color: var(--accent); font-family: 'DM Mono', monospace; }
+#infoSales      { color: var(--blue);   font-family: 'DM Mono', monospace; }
+
+/* ════════════════════════════════════════════
+   SCROLLBAR (global)
+   ════════════════════════════════════════════ */
+::-webkit-scrollbar       { width: 4px; height: 4px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+
+/* ════════════════════════════════════════════
+   RESPONSIVE
+   ════════════════════════════════════════════ */
+@media (max-width: 900px) {
+  .admin-container      { grid-template-columns: 1fr; }
+  .sidebar              { display: none; }
+  .settings-grid        { grid-template-columns: 1fr; padding: 16px; }
+}
+
+@media (max-width: 520px) {
+  .page-header   { padding: 14px 16px; }
+  .settings-grid { padding: 12px; gap: 12px; }
+  .settings-card { padding: 16px; }
+}
+
+/* ════════════════════════════════════════════
+   PRINT
+   ════════════════════════════════════════════ */
+@media print {
+  .sidebar, .primary-btn,
+  .settings-card > button { display: none !important; }
+  .admin-container { grid-template-columns: 1fr; }
+  body { background: #fff; color: #000; }
+}
+</style>
+
+</head>
+<body>
+
+<div class="admin-container">
+
+    <!-- SIDEBAR -->
+    <div class="sidebar">
+        <h2><i class="fas fa-store"></i> SmartPOS</h2>
+        <ul>
+            <li><a href="admin.html"><i class="fas fa-chart-pie"></i> Dashboard</a></li>
+            <li><a href="product.html"><i class="fas fa-box"></i> Products</a></li>
+            <li><a href="sales.html"><i class="fas fa-receipt"></i> Sales</a></li>
+            
+            <li><a href="settings.html" class="active"><i class="fas fa-cog"></i> Settings</a></li>
+        </ul>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div class="main">
+
+        <div class="page-header">
+            <h2>System Settings</h2>
+            <p>Manage system security, users, and data</p>
+        </div>
+
+        <div class="settings-grid">
+
+            <!-- ================= SECURITY SECTION ================= -->
+            <div class="settings-section">
+                <h3 class="section-title"><i class="fas fa-shield-alt"></i> Security</h3>
+
+                <!-- Change Admin Password -->
+                <div class="settings-card">
+                    <h4>Change Admin Password</h4>
+
+                    <input type="password" id="currentPass" placeholder="Current Password">
+                    <input type="password" id="newPass" placeholder="New Password">
+
+                    <button id="changePassBtn" class="primary-btn">
+                        Change Password
+                    </button>
+
+                    <p id="passMsg"></p>
+                </div>
+
+                <!-- Cashier Management -->
+                <div class="settings-card">
+                    <h4><i class="fas fa-users"></i> Cashier Management</h4>
+
+                    <input type="text" id="cashierUsername" placeholder="Cashier Username">
+                    <input type="password" id="cashierPassword" placeholder="Cashier Password">
+
+                    <button id="addCashierBtn" class="primary-btn">
+                        Add Cashier
+                    </button>
+
+                    <hr>
+
+                    <h5>Existing Cashiers</h5>
+                    <ul id="cashierList" class="cashier-list"></ul>
+
+                    <p id="cashierMsg"></p>
+                </div>
+            </div>
+
+            <!-- ================= BACKUP SECTION ================= -->
+            <div class="settings-section">
+                <h3 class="section-title"><i class="fas fa-database"></i> Backup & Restore</h3>
+
+                <!-- Auto Backup -->
+                <div class="settings-card">
+                    <h4><i class="fas fa-cloud-upload-alt"></i> Automatic Daily Backup</h4>
+                    <p>System stores full backup once per day.</p>
+                    <p>Last Backup: <strong id="lastBackupDate">Never</strong></p>
+                </div>
+
+                <!-- Restore -->
+                <div class="settings-card">
+                    <h4><i class="fas fa-undo"></i> Restore System Data</h4>
+                    <p>Upload backup file to restore system</p>
+
+                    <input type="file" id="restoreFile" accept=".json">
+                    <button id="restoreBtn" class="primary-btn">
+                        Restore Backup
+                    </button>
+                    <button id="downloadBackupBtn">Download Backup</button>
+                </div>
+            </div>
+
+            <!-- ================= DANGER ZONE ================= -->
+            
+                    
+
+            <!-- ================= SYSTEM INFO ================= -->
+            <div class="settings-section">
+                <h3 class="section-title"><i class="fas fa-info-circle"></i> System Information</h3>
+
+                <div class="settings-card">
+                    <p>Total Products: <strong id="infoProducts">0</strong></p>
+                    <p>Total Sales: <strong id="infoSales">0</strong></p>
+                    <p>System Version: <strong>SmartPOS v2.0</strong></p>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+</div>
+
+<script src="settings.js"></script>
+</body>
+</html>

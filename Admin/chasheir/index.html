@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SmartPOS System</title>
+
+<!-- Icons -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+<!-- Barcode Scanner -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/quagga/0.12.1/quagga.min.js"></script>
+
+
+<link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+
+    
+    
+    
+
+<div class="container">
+
+    <!-- ================= HEADER ================= -->
+    <header class="main-header">
+        <div class="logo">
+            <h2><i class="fas fa-store"></i> SmartPOS Supermarket</h2>
+        </div>
+        <div class="header-info">
+    <div id="dateTime"></div>
+        </div>
+        <button onclick="logoutCashier()">Logout</button>
+<span id="loggedUser"></span>
+    
+        </header>
+
+    <!-- ================= TOP SUMMARY ================= -->
+    <section class="summary-section">
+
+        <div class="summary-card">
+            <h4><i class="fas fa-chart-line"></i> Today's Sales</h4>
+            <h2>GH₵ <span id="dailySales">0.00</span></h2>
+        </div>
+
+        <div class="summary-card">
+            <h4><i class="fas fa-shopping-cart"></i> Cart Items</h4>
+            <h2><span id="cartItemCount">0</span></h2>
+        </div>
+
+        <div class="summary-card">
+            <h4><i class="fas fa-cash-register"></i> Current Total</h4>
+            <h2>GH₵ <span id="grandTotal">0.00</span></h2>
+        </div>
+        <div class="summary-card">
+    <h4><i class="fas fa-calendar"></i> Monthly Revenue</h4>
+    <h2>GH₵ <span id="monthlyRevenue">0.00</span></h2>
+</div>
+
+    </section>
+
+    <!-- ================= POS SECTION ================= -->
+<div class="pos-section">
+
+    <!-- LEFT SIDE (PRODUCTS) -->
+    <div class="pos-left">
+
+        <!-- SEARCH -->
+        <input type="text" id="productSearch" placeholder="Search products or scan barcode..." />
+
+        <!-- BARCODE -->
+        <div class="barcode-wrapper">
+            <input type="text" id="barcodeInput" placeholder="Scan barcode">
+            <button onclick="startScanner()"><i class="fas fa-camera"></i></button>
+            <button onclick="stopScanner()">X</button>
+        </div>
+
+        <div id="scanner-container"></div>
+
+        <!-- KEEP THESE (HIDDEN FOR JS) -->
+        <select id="productSelect"hidden ></select>
+        <select id="saleType" >
+            <option value="unit">Unit</option>
+            <option value="bulk">Bulk</option>
+        </select>
+        <input type="number" id="priceInput" hidden>
+        <input type="number" id="qtyInput" value="1" hidden>
+
+        <!-- PRODUCT GRID -->
+        <div id="productGrid" class="product-grid"></div>
+
+    </div>
+
+    <!-- RIGHT SIDE (CART) -->
+    <div class="pos-right">
+
+        
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Item</th>
+                    <th>Qty</th>
+                    <th>Total</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody id="cartTable"></tbody>
+        </table>
+
+        <div class="discount-section">
+            <input type="number" id="discountInput" placeholder="Discount">
+        </div>
+
+        <select id="paymentMethod">
+            <option value="Cash">Cash</option>
+            <option value="Mobile Money">Mobile Money</option>
+            <option value="Card">Card</option>
+        </select>
+
+        <input type="number" id="cashReceived" placeholder="Cash Received">
+
+        <h4>Balance: GH₵ <span id="balanceAmount">0.00</span></h4>
+
+        <h2>GH₵ <span id="grandTotalDisplay">0.00</span></h2>
+
+        <button onclick="clearCart()">Clear</button>
+        <button class="print-btn" onclick="printReceipt()"><i class="fas fa-print"></i> Print Receipt</button>
+      
+
+    </div>
+
+</div>
+<!-- ================= RECEIPT TEMPLATE ================= -->
+<div class="modal-overlay receipt-modal" id="receiptModal">
+  <div class="modal" style="width:360px;">
+    <div class="modal-title">🖨️ Receipt Preview</div>
+    <div class="receipt-paper" id="receiptPaper"></div>
+    <div class="modal-btns">
+      <button class="btn-cancel" onclick="closeModal('receiptModal')">Close</button>
+      <button class="btn-primary" onclick="doPrint()">
+        <i class="fas fa-print"></i> Print
+      </button>
+    </div>
+  </div>
+</div>
+<div id="printArea"></div>
+<div class="toast" id="toast"></div>
+
+     <footer>
+            © 2026 SmartPOS Professional Edition
+        </footer>
+
+<script src="script.js"></script>
+
+</body>
+</html>
