@@ -13,8 +13,7 @@ try{
 const saleData = req.body;
 const items = saleData.items || [];
 
-const io = req.app.get("io");
-io.emit("new-sale", sale);
+
 
 // ensure cashier name is saved
 saleData.cashierName = saleData.cashierName || "Unknown";
@@ -46,6 +45,8 @@ await product.save();
 }
 
 }
+const io = req.app.get("io");
+io.emit("new-sale", sale);
 
 res.json(sale);
 
