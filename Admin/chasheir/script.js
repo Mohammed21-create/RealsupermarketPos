@@ -499,7 +499,8 @@ window.printReceipt = async function () {
 
   try {
 
-    const res = await fetch("http://localhost:5000/api/sales", {
+    const res = await fetch("http://api/sales", {
+      credentials: "include",
       method: "POST",
       headers: {
         "Content-Type": "application/json"

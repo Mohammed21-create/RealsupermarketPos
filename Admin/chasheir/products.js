@@ -5,7 +5,7 @@ document.addEventListener("DOMContentLoaded", function () {
     let products = [];
     let editIndex = null;
 
-    const API_URL = "http://localhost:5000/api/products"; // backend URL
+    const API_URL = "http://api/products"; // backend URL
 
     // ================= LOAD PRODUCTS FROM BACKEND =================
     async function loadProducts() {

@@ -3,9 +3,7 @@
 // ===============================
 
 // Protect page
-if (localStorage.getItem("admin_logged_in") !== "true") {
-    window.location.href = "login.html";
-}
+
 let currentReportData = [];
 let currentSearchReport= "";
 
