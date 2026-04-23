@@ -1,5 +1,5 @@
 const Cashier = require("../models/Cashier");
-const bcrypt = require("bcryptjs");
+const bcryptjs = require("bcryptjs");
 
 
 // ======================

@@ -1,6 +1,6 @@
 const Admin = require("../models/Admin");
 const Cashier = require("../models/Cashier");
-const bcrypt = require("bcrypt");
+const bcryptjs = require("bcryptjs");
 
 // ==========================
 // LOGIN (ADMIN + CASHIER)
@@ -13,7 +13,7 @@ exports.login = async (req, res) => {
     let user = await Admin.findOne({ username });
 
     if (user) {
-      const match = await bcrypt.compare(password, user.password);
+      const match = await bcryptjs.compare(password, user.password);
 
       if (!match) {
         return res.status(401).json({ message: "Invalid login" });
@@ -32,7 +32,7 @@ exports.login = async (req, res) => {
     user = await Cashier.findOne({ username });
 
     if (user) {
-      const match = await bcrypt.compare(password, user.password);
+      const match = await bcryptjs.compare(password, user.password);
 
       if (!match) {
         return res.status(401).json({ message: "Invalid login" });

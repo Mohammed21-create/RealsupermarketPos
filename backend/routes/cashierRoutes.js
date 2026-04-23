@@ -1,6 +1,6 @@
 const router = require("express").Router();
 const Cashier = require("../models/Cashier");
-const bcrypt = require("bcrypt");
+const bcryptjs = require("bcryptjs");
 
 
 // =====================
