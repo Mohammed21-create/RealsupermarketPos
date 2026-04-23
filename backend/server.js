@@ -23,8 +23,8 @@ resave:false,
 saveUninitialized:false,
 cookie: {
     
-    secure: true,
-    sameSite: "none",
+    secure: false,
+    
     
     maxAge: 1000 * 60 * 24
 }
