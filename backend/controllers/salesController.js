@@ -2,6 +2,7 @@ const Sale = require("../models/Sale");
 const Product = require("../models/Product");
 
 
+
 // =====================================
 // CREATE SALE
 // =====================================
@@ -11,6 +12,9 @@ try{
 
 const saleData = req.body;
 const items = saleData.items || [];
+
+const io = req.app.get("io");
+io.emit("new-sale", sale);
 
 // ensure cashier name is saved
 saleData.cashierName = saleData.cashierName || "Unknown";
@@ -191,3 +195,4 @@ exports.syncSales = async (req, res) => {
   }
 
 };
+
