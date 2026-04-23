@@ -11,7 +11,7 @@ const path = require("path")
 const app = express()
 
 app.use(cors({
-origin: "http://localhost:3000",
+origin: "true",
 credentials:true
 }))
 app.use(express.json())
@@ -22,8 +22,10 @@ secret:process.env.SESSION_SECRET,
 resave:false,
 saveUninitialized:false,
 cookie: {
-    httpOnly: true,
-    secure: false,
+    
+    secure: true,
+    sameSite: "none",
+    
     maxAge: 1000 * 60 * 24
 }
 
