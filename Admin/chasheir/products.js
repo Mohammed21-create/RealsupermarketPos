@@ -1,39 +1,45 @@
-/* product.js - Admin Product Management */
+/* product.js - Admin Product Management (PRODUCTION READY) */
 
 document.addEventListener("DOMContentLoaded", function () {
 
     let products = [];
     let editIndex = null;
 
-    const API_URL = "http://api/products"; // backend URL
+    // ✅ FIXED API URL (VERY IMPORTANT)
+    const API_URL = "/api/products";
 
-    // ================= LOAD PRODUCTS FROM BACKEND =================
+    // ================= LOAD PRODUCTS =================
     async function loadProducts() {
         try {
-            const res = await fetch(API_URL);
+            const res = await fetch(API_URL, {
+                credentials: "include"
+            });
+
             if (!res.ok) throw new Error("Server error while fetching products");
+
             products = await res.json();
 
-            // Normalize fields
+            // Normalize data
             products = products.map(p => ({
-    ...p,
-    emoji: p.emoji || "📦", // ✅ ADD THIS
-    unitPrice: Number(p.unitPrice || 0),
-    bulkPrice: Number(p.bulkPrice || 0),
-    unitsPerBulk: Number(p.unitsPerBulk || 1),
-    unitCost: Number(p.unitCost || 0),
-    bulkCost: Number(p.bulkCost || (p.unitCost * (p.unitsPerBulk || 1))),
-    stock: Number(p.stock || 0),
-}));
+                ...p,
+                emoji: p.emoji || "📦",
+                unitPrice: Number(p.unitPrice || 0),
+                bulkPrice: Number(p.bulkPrice || 0),
+                unitsPerBulk: Number(p.unitsPerBulk || 1),
+                unitCost: Number(p.unitCost || 0),
+                bulkCost: Number(p.bulkCost || (p.unitCost * (p.unitsPerBulk || 1))),
+                stock: Number(p.stock || 0),
+            }));
 
             renderProducts();
+
         } catch (err) {
             console.error("Failed to load products:", err);
             alert("Error loading products from server");
         }
     }
 
-    // ================= BARCODE GENERATOR =================
+    // ================= BARCODE =================
     function generateBarcode() {
         return "POS-" + Date.now();
     }
@@ -60,7 +66,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
         const productData = {
             name,
-             emoji,
+            emoji,
             unitPrice,
             bulkPrice: bulkPrice || 0,
             unitsPerBulk: finalUnitsPerBulk,
@@ -71,22 +77,26 @@ document.addEventListener("DOMContentLoaded", function () {
 
         try {
             if (editIndex === null) {
+
                 productData.barcode = generateBarcode();
 
                 const res = await fetch(API_URL, {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
+                    credentials: "include",
                     body: JSON.stringify(productData)
                 });
 
                 if (!res.ok) throw new Error("Failed to add product");
 
             } else {
+
                 const id = products[editIndex]._id;
 
                 const res = await fetch(`${API_URL}/${id}`, {
                     method: "PUT",
                     headers: { "Content-Type": "application/json" },
+                    credentials: "include",
                     body: JSON.stringify(productData)
                 });
 
@@ -100,20 +110,20 @@ document.addEventListener("DOMContentLoaded", function () {
 
         } catch (err) {
             console.error("Error saving product:", err);
-            alert("Failed to save product. See console for details.");
+            alert("Failed to save product. Check console.");
         }
     };
 
     // ================= CLEAR FORM =================
     function clearForm() {
         document.getElementById("productName").value = "";
+        document.getElementById("productEmoji").value = "";
         document.getElementById("unitPrice").value = "";
         document.getElementById("bulkPrice").value = "";
         document.getElementById("unitsPerBulk").value = "";
         document.getElementById("productCost").value = "";
         document.getElementById("bulkCost").value = "";
         document.getElementById("productStock").value = "";
-        document.getElementById("productEmoji").value = "";
     }
 
     // ================= RENDER PRODUCTS =================
@@ -122,6 +132,7 @@ document.addEventListener("DOMContentLoaded", function () {
         tbody.innerHTML = "";
 
         products.forEach((product, index) => {
+
             const unitProfit = product.unitPrice - product.unitCost;
             const bulkProfit = product.bulkPrice - product.bulkCost;
 
@@ -150,22 +161,24 @@ document.addEventListener("DOMContentLoaded", function () {
                     <td>
                         <svg id="barcode${index}"></svg><br>
                         <small>${product.barcode}</small><br>
-                        <button onclick="printBarcode(${index})"><i class="fas fa-print"></i></button>
+                        <button onclick="printBarcode(${index})">🖨️</button>
                     </td>
                     <td>
-                        <button class="edit-btn" onclick="editProduct(${index})"><i class="fas fa-edit"></i></button>
-                        <button class="delete-btn" onclick="deleteProduct(${index})"><i class="fas fa-trash"></i></button>
+                        <button onclick="editProduct(${index})">✏️</button>
+                        <button onclick="deleteProduct(${index})">🗑️</button>
                     </td>
                 </tr>
             `;
 
             tbody.innerHTML += row;
 
-            JsBarcode(`#barcode${index}`, product.barcode, {
-                format: "CODE128",
-                width: 2,
-                height: 40
-            });
+            if (product.barcode) {
+                JsBarcode(`#barcode${index}`, product.barcode, {
+                    format: "CODE128",
+                    width: 2,
+                    height: 40
+                });
+            }
         });
     }
 
@@ -192,14 +205,18 @@ document.addEventListener("DOMContentLoaded", function () {
         try {
             const id = products[index]._id;
 
-            const res = await fetch(`${API_URL}/${id}`, { method: "DELETE" });
-            if (!res.ok) throw new Error("Failed to delete product");
+            const res = await fetch(`${API_URL}/${id}`, {
+                method: "DELETE",
+                credentials: "include"
+            });
+
+            if (!res.ok) throw new Error("Delete failed");
 
             loadProducts();
 
         } catch (err) {
             console.error("Delete failed:", err);
-            alert("Failed to delete product. See console for details.");
+            alert("Failed to delete product");
         }
     };
 
@@ -213,7 +230,7 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     });
 
-    // ================= PRINT BARCODE =================
+    // ================= PRINT =================
     window.printBarcode = function (index) {
         const product = products[index];
 
@@ -222,8 +239,7 @@ document.addEventListener("DOMContentLoaded", function () {
         printWindow.document.write(`
             <h3>${product.name}</h3>
             <svg id="printBarcode"></svg>
-            <p>Unit Price: GH₵ ${product.unitPrice.toFixed(2)}</p>
-            <p>Bulk Price: GH₵ ${product.bulkPrice.toFixed(2)}</p>
+            <p>GH₵ ${product.unitPrice.toFixed(2)}</p>
             <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.5/dist/JsBarcode.all.min.js"><\/script>
             <script>
                 JsBarcode("#printBarcode", "${product.barcode}", {
@@ -238,7 +254,7 @@ document.addEventListener("DOMContentLoaded", function () {
         printWindow.print();
     };
 
-    // ================= INITIAL LOAD =================
+    // ================= INIT =================
     loadProducts();
 
 });
