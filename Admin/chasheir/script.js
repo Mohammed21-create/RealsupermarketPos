@@ -499,12 +499,12 @@ window.printReceipt = async function () {
 
   try {
 
-    const res = await fetch("http://api/sales", {
-      credentials: "include",
+    const res = await fetch("/api/sales", {   // ✅ FIXED HERE
       method: "POST",
       headers: {
         "Content-Type": "application/json"
       },
+      credentials: "include", // ✅ keep session working
       body: JSON.stringify({
         cashierId: currentCashier?.id,
         cashierName: currentCashier?.username,
@@ -521,10 +521,8 @@ window.printReceipt = async function () {
       return;
     }
 
-    // ✅ CALL MODAL FUNCTION (RENAMED)
     showReceiptModal();
 
-    // clear AFTER showing
     cart = [];
     grandTotal = 0;
 
@@ -538,7 +536,6 @@ window.printReceipt = async function () {
     alert("Cannot connect to server.");
   }
 };
-
 // ===============================
 // RECEIPT
 // ===============================
