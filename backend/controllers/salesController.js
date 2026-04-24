@@ -28,8 +28,8 @@ await sale.save();
 // =====================================
 for(const item of items){
 
-const product = await Product.findOne({
-name: item.name
+const product = await Product.findById({
+name: item.productId
 });
 
 if(product){

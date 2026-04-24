@@ -12,7 +12,7 @@ exports.processRefund = async (req, res) => {
     let refundLoss = 0;
 
     for (const item of items) {
-      const product = await Product.findOne({ name: item.name });
+      const product = await Product.findById({ name: item.productId });
       if (!product) continue;
 
       const qty = Number(item.qty) || 0;
