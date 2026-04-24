@@ -80,9 +80,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   updateTime(); // start clock immediately
 
 });
-socket.on("new-sale", () => {
-  loadProducts(); // refresh product stock
-});
+
 
 // ===============================
 // LOAD PRODUCTS

@@ -86,9 +86,6 @@ console.log(err);
 
 const socket = io(); // auto connects to same server
 
-socket.on("connect", () => {
-  console.log("🟢 Connected to server:", socket.id);
-});
 
 const socket = io();
 
