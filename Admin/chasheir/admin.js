@@ -6,6 +6,53 @@ let sales = [];
 let adminUser = null;
 
 
+
+
+// =================================
+// SOCKET CONNECTION
+// =================================
+let socket;
+
+function initSocket(){
+
+  socket = io(window.location.origin, {
+    transports: ["websocket"],
+    withCredentials: true
+  });
+
+  socket.on("connect", () => {
+    console.log("🟢 Admin connected:", socket.id);
+  });
+
+  socket.on("connect_error", (err) => {
+    console.error("❌ Socket error:", err.message);
+  });
+
+  // 🔥 LISTEN FOR NEW SALES
+  socket.on("new-sale", (sale) => {
+
+    console.log("🔥 New sale received:", sale);
+
+    // 👉 PUSH new sale instantly
+    sales.unshift(sale);
+
+    // 👉 refresh only what matters (FAST)
+    updateDashboard();
+    updateAIInsights();
+    updateCashierLeaderboard();
+
+    // optional
+    loadProducts(); // update stock
+    checkLowStock();
+
+    // 🔔 notification
+    showToast("🛒 New sale recorded!");
+
+  });
+
+}
+
+
 // =================================
 // FETCH ADMIN
 // =================================
@@ -1056,6 +1103,7 @@ document.getElementById("aiFraudAlert").textContent = fraud;
 // INIT
 // =================================
 document.addEventListener("DOMContentLoaded", async ()=>{
+    initSocket();
 
 await fetchAdmin();
 

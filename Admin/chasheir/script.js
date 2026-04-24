@@ -62,10 +62,49 @@ let cart = [];
 let grandTotal = 0;
 let dailyTotal = 0;
 
+
+// ===============================
+// 🔌 SOCKET CONNECTION
+// ===============================
+let socket;
+
+function initSocket(){
+
+  socket = io(window.location.origin, {
+    transports: ["websocket"],
+    withCredentials: true
+  });
+
+  socket.on("connect", () => {
+    console.log("🟢 Cashier connected:", socket.id);
+  });
+
+  socket.on("connect_error", (err) => {
+    console.error("❌ Socket error:", err.message);
+  });
+
+  // 🔥 RECEIVE NEW SALE (from other devices)
+  socket.on("new-sale", (sale) => {
+
+    console.log("📦 Sale update received:", sale);
+
+    // update daily total instantly
+    dailyTotal += Number(sale.total || 0);
+    updateDaily();
+
+    // reload products (stock updated)
+    loadProducts();
+
+  });
+
+}
+
 // ===============================
 // INIT
 // ===============================
 document.addEventListener("DOMContentLoaded", async () => {
+
+  initSocket();
 
   await fetchCurrentCashier();
 
@@ -432,64 +471,6 @@ function clearCart() {
     renderCart();
 }
 
-// ===============================
-// SAVE SALE + PRINT RECEIPT
-// ===============================
-/*
-window.printReceipt = async function () {
-
-  if (cart.length === 0) return alert("Cart empty");
-
-  const finalTotal = Number(grandTotalDisplay.textContent);
-
-  try {
-
-    const res = await fetch("/api/sales", {
-
-      method: "POST",
-
-      headers: { "Content-Type": "application/json" },
-
-      body: JSON.stringify({
-
-        cashierId: currentCashier.id,
-        cashierName: currentCashier.username,
-        items: cart,
-        total: finalTotal,
-        paymentMethod: paymentMethod.value
-
-      })
-
-    });
-
-    const data = await res.json();
-
-    if (!res.ok) throw new Error(data.message);
-
-    generateReceipt(finalTotal);
-
-    setTimeout(() => {
-      window.print();
-    }, 200);
-
-    cart = [];
-    grandTotal = 0;
-
-    renderCart();
-
-    await loadProducts();
-    await loadDailyTotal();
-
-  } catch (err) {
-
-    console.log(err);
-
-    alert("Sale failed");
-
-  }
-
-};
-*/
 
 window.printReceipt = async function () {
 
@@ -539,39 +520,7 @@ window.printReceipt = async function () {
     alert("Cannot connect to server.");
   }
 };
-// ===============================
-// RECEIPT
-// ===============================
-/*
-function generateReceipt(total) {
 
-  const receiptItems = document.getElementById("receiptItems");
-
-  if (!receiptItems) return;
-
-  receiptItems.innerHTML = "";
-
-  cart.forEach(item => {
-
-    const p = document.createElement("p");
-
-    p.textContent = `${item.name} (${item.type}) x${item.qty} GH₵${item.total.toFixed(2)}`;
-
-    receiptItems.appendChild(p);
-
-  });
-  
-
-  const totalEl = document.getElementById("receiptTotal");
-  const dateEl = document.getElementById("receiptDate");
-  const payEl = document.getElementById("receiptPayment");
-
-  if (totalEl) totalEl.textContent = total.toFixed(2);
-  if (dateEl) dateEl.textContent = new Date().toLocaleString();
-  if (payEl) payEl.textContent = "Payment: " + paymentMethod.value;
-
-}
-  */
  
   
 function showReceiptModal(){
@@ -655,31 +604,6 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 });
 
-/*
-function doPrint() {
-
-  const content = document.getElementById('receiptPaper').innerHTML;
-
-  if (!content) {
-    alert("Receipt empty");
-    return;
-  }
-
-  const printArea = document.getElementById('printArea');
-
-  printArea.innerHTML = `
-    <div style="font-family:'Courier New',monospace;font-size:12px;width:280px;">
-      ${content}
-    </div>
-  `;
-
-  // small delay ensures content renders
-  setTimeout(() => {
-    window.print();
-    printArea.innerHTML = ""; // ✅ clear after print
-  }, 100);
-}
-  */
 
 function doPrint(){
 
@@ -733,78 +657,6 @@ function doPrint(){
   };
 }
 
-/*
-function printReceipt(){
-  if(cart.length===0){showToast('⚠️ Cart is empty','warning');return;}
-  const total=parseFloat(document.getElementById('grandTotalDisplay').textContent)||0;
-  const disc=parseFloat(document.getElementById('discountInput').value)||0;
-  const method=document.getElementById('paymentMethod').value;
-  const cash=parseFloat(document.getElementById('cashReceived').value)||0;
-  const change=method==='Cash'?Math.max(0,cash-total):0;
-  const now=new Date();
-  const orderId='ORD-'+String(orders.length+1).padStart(4,'0');
-  const itemsHTML=cart.map(c=>`<div class="receipt-item-row"><span>${c.emoji} ${c.name} (${c.saleType}) ×${c.qty}</span><span>GH₵ ${(c.price*c.qty).toFixed(2)}</span></div>`).join('');
-  document.getElementById('receiptPaper').innerHTML=`
-    <h2>SmartPOS Supermarket</h2>
-    <p class="receipt-center">Accra, Ghana | Tel: 0302-000-000</p>
-    <p class="receipt-center">${now.toLocaleString()}</p>
-    <p class="receipt-center">Receipt #: ${orderId}</p>
-    <p class="receipt-center">Cashier: ${loggedInUser||'—'}</p>
-    <hr/>${itemsHTML}<hr/>
-    ${disc>0?`<div class="receipt-item-row"><span>Discount</span><span>-GH₵ ${disc.toFixed(2)}</span></div>`:''}
-    <div class="receipt-item-row receipt-total"><span>GRAND TOTAL</span><span>GH₵ ${total.toFixed(2)}</span></div>
-    <div class="receipt-item-row"><span>Payment</span><span>${method}</span></div>
-    ${method==='Cash'?`<div class="receipt-item-row"><span>Cash Received</span><span>GH₵ ${cash.toFixed(2)}</span></div><div class="receipt-item-row"><span>Change</span><span>GH₵ ${change.toFixed(2)}</span></div>`:''}
-    <hr/><p class="receipt-center" style="font-size:11px;">Items purchased are NOT refundable.</p>
-    <p class="receipt-center">Thank you for shopping with us!</p><p class="receipt-center">★★★★★</p>`;
-  document.getElementById('receiptModal').classList.add('open');
-  orders.unshift({id:orderId,time:now,items:cart.map(c=>({...c})),total,disc,method,cashier:loggedInUser,status:'completed'});
-  cart.forEach(c=>{const p=products.find(x=>x.id===c.id);if(p)p.stock=Math.max(0,p.stock-c.qty);});
-  dailySales+=total; monthlySales+=total;
-  document.getElementById('dailySales').textContent=dailySales.toFixed(2);
-  document.getElementById('monthlyRevenue').textContent=monthlySales.toFixed(2);
-  clearCart(); renderProductGrid(); populateProductSelect();
-  showToast('✅ '+orderId+' — receipt ready','success');
-}
-
-function doPrint(){
-  document.getElementById('printArea').innerHTML=`<div style="font-family:'Courier New',monospace;font-size:12px;width:280px;">${document.getElementById('receiptPaper').innerHTML}</div>`;
-  window.print();
-}
-
-
-function closeModal(id){document.getElementById(id).classList.remove('open');}
-document.querySelectorAll('.modal-overlay').forEach(o=>{
-  o.addEventListener('click',e=>{if(e.target===o)o.classList.remove('open');});
-});
-
-function showToast(msg,type='success'){
-  const t=document.getElementById('toast');
-  t.textContent=msg; t.className='toast '+type+' show';
-  clearTimeout(t._t);
-  t._t=setTimeout(()=>t.classList.remove('show'),2800);
-}
-
-
-/*
-function doPrint(){
-
-  const content = document.getElementById('receiptPaper').innerHTML;
-
-  if(!content){
-    alert("Receipt empty");
-    return;
-  }
-
-  document.getElementById('printArea').innerHTML = `
-    <div style="font-family:'Courier New';font-size:12px;width:280px;">
-      ${content}
-    </div>
-  `;
-
-  window.print();
-}
-  */
 
 // ===============================
 // DAILY SALES
