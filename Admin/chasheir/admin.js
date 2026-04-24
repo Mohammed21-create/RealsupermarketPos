@@ -84,17 +84,7 @@ console.log(err);
 
 }
 
-const socket = io(); // auto connects to same server
 
-
-const socket = io();
-
-// Listen for new sale
-socket.on("new-sale", (sale) => {
-  console.log("New sale received 🔥", sale);
-
-  loadSales(); // reload or append
-});
 
 
 
