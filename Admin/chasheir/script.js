@@ -295,6 +295,16 @@ function addProductToCart(product) {
   const type = document.getElementById("saleType").value || "unit";
   const qty = parseInt(document.getElementById("qtyInput").value) || 1;
 
+  const stock =Number(product.stock)|| 0;
+  if(stock <= 0) {
+    alert("Product out of stock");
+    return;
+  }
+  if(qty > stock){
+    alert(`Only ${stock} items left`)
+    return;
+  }
+
   let price = 0;
 
   if (type === "bulk") {
@@ -741,6 +751,8 @@ readers:[
 ]
 
 }
+
+
 
 },function(err){
 

@@ -41,7 +41,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // ================= BARCODE =================
     function generateBarcode() {
-        return "POS-" + Date.now();
+        return  Date.now().toString();
     }
 
     // ================= ADD / UPDATE PRODUCT =================

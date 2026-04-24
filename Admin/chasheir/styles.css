@@ -501,12 +501,16 @@ h4{
    ════════════════════════════════════════════ */
 /* receipt */
 .receipt-modal .modal{width:340px;}
-.receipt-paper{background:#fff;color:#111;font-family:'Courier New',monospace;font-size:12px;padding:20px;border-radius:8px;line-height:1.7;}
+.receipt-paper{background:#fff;color:#111;font-family:'Courier New',monospace;font-size:12px;padding:20px;border-radius: 8px;line-height:1.7; width: 80mm; max-width: 80mm;}
 .receipt-paper h2{text-align:center;font-size:15px;margin-bottom:4px;}
 .receipt-paper .receipt-center{text-align:center;}
 .receipt-paper hr{border:none;border-top:1px dashed #999;margin:8px 0;}
 .receipt-paper .receipt-item-row{display:flex;justify-content:space-between;}
 .receipt-paper .receipt-total{font-weight:700;font-size:14px;}
+@page{
+  size: 80mm auto;
+  margin: 0;
+}
 
 /* TOAST */
 .toast{position:fixed;bottom:22px;right:22px;background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:11px 17px;font-size:13px;z-index:300;display:flex;align-items:center;gap:8px;transform:translateY(70px);opacity:0;transition:all .3s cubic-bezier(.34,1.56,.64,1);pointer-events:none;}

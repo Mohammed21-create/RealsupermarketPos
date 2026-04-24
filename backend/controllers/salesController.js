@@ -15,11 +15,20 @@ exports.createSale = async (req, res) => {
     // =============================
     // VALIDATION
     // =============================
-    if (!items || items.length === 0) {
-      return res.status(400).json({
-        message: "No items in cart"
-      });
-    }
+    for (const item of items) {
+
+  const product = await Product.findById(item.productId);
+
+  if (!product) {
+    return res.status(400).json({ message: "Product not found" });
+  }
+
+  if (product.stock < item.qty) {
+    return res.status(400).json({
+      message: `${product.name} out of stock`
+    });
+  }
+}
 
     // ensure cashier name
     saleData.cashierName = saleData.cashierName || "Unknown";
