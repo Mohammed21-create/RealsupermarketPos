@@ -266,6 +266,7 @@ function addProductToCart(product) {
   const total = price * qty;
 
   const item = {
+    productId: product. _id,
     name: product.name,
     type: type,              // ✅ IMPORTANT
     qty: qty,
@@ -303,6 +304,7 @@ window.addToCart = function () {
   const total = price * qty;
 
   const item = {
+    productId: product. _id,
     name: product.name,
     type: type,
     qty: qty,

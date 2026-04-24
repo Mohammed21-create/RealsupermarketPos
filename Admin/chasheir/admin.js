@@ -1,7 +1,3 @@
-
-socket.on("new-sale", () => {
-  loadDailyTotal(); // auto refresh total
-});
 // =================================
 // GLOBAL DATA
 // =================================
@@ -88,15 +84,14 @@ console.log(err);
 
 }
 
-const notificationSound = new Audio("beep.mp3");
+const socket = io();
 
+// Listen for new sale
 socket.on("new-sale", (sale) => {
-  notificationSound.play().catch(()=>{});
+  console.log("New sale received 🔥", sale);
 
-  loadSales();
+  loadSales(); // reload or append
 });
-
-
 
 
 // =================================

@@ -1,199 +1,236 @@
 const Sale = require("../models/Sale");
 const Product = require("../models/Product");
 
-
-
 // =====================================
 // CREATE SALE
 // =====================================
 exports.createSale = async (req, res) => {
+  try {
 
-try{
+    console.log("📥 Incoming Sale:", req.body);
 
-const saleData = req.body;
-const items = saleData.items || [];
+    const saleData = req.body;
+    const items = saleData.items || [];
 
+    // =============================
+    // VALIDATION
+    // =============================
+    if (!items || items.length === 0) {
+      return res.status(400).json({
+        message: "No items in cart"
+      });
+    }
 
+    // ensure cashier name
+    saleData.cashierName = saleData.cashierName || "Unknown";
 
-// ensure cashier name is saved
-saleData.cashierName = saleData.cashierName || "Unknown";
+    // =============================
+    // UPDATE PRODUCT STOCK FIRST
+    // =============================
+    for (const item of items) {
 
-// create sale
-const sale = new Sale(saleData);
-await sale.save();
+      if (!item.productId) {
+        return res.status(400).json({
+          message: "Missing productId in cart item"
+        });
+      }
 
+      const product = await Product.findById(item.productId);
 
-// =====================================
-// UPDATE PRODUCT STOCK
-// =====================================
-for(const item of items){
+      if (!product) {
+        return res.status(400).json({
+          message: "Product not found",
+          error: item.productId
+        });
+      }
 
-const product = await Product.findById({
-name: item.productId
-});
+      const qty = Number(item.qty) || 0;
 
-if(product){
+      if (qty <= 0) {
+        return res.status(400).json({
+          message: "Invalid quantity",
+          error: item
+        });
+      }
 
-product.stock -= Number(item.qty) || 0;
+      // reduce stock
+      product.stock -= qty;
 
-if(product.stock < 0){
-product.stock = 0;
-}
+      if (product.stock < 0) {
+        product.stock = 0;
+      }
 
-await product.save();
+      await product.save();
+    }
 
-}
+    // =============================
+    // SAVE SALE AFTER STOCK SUCCESS
+    // =============================
+    const sale = new Sale(saleData);
+    await sale.save();
 
-}
-const io = req.app.get("io");
-io.emit("new-sale", sale);
+    console.log("✅ Sale saved:", sale._id);
 
-res.json(sale);
+    // =============================
+    // REAL-TIME UPDATE (SOCKET)
+    // =============================
+    const io = req.app.get("io");
+    if (io) {
+      io.emit("new-sale", sale);
+    }
 
-}catch(err){
+    // =============================
+    // RESPONSE
+    // =============================
+    res.status(201).json({
+      message: "Sale successful",
+      sale
+    });
 
-res.status(500).json({ error: err.message });
+  } catch (err) {
 
-}
+    console.error("❌ SALE ERROR:", err);
 
+    res.status(500).json({
+      message: "Sale failed",
+      error: err.message
+    });
+
+  }
 };
-
-
 
 // =====================================
 // GET ALL SALES
 // =====================================
 exports.getAllSales = async (req, res) => {
+  try {
 
-try{
+    const sales = await Sale.find().sort({ createdAt: -1 });
 
-const sales = await Sale.find()
-.sort({ createdAt: -1 });
+    res.json(sales);
 
-res.json(sales);
+  } catch (err) {
 
-}catch(err){
+    res.status(500).json({
+      message: "Failed to fetch sales",
+      error: err.message
+    });
 
-res.status(500).json({ error: err.message });
-
-}
-
+  }
 };
-
-
 
 // =====================================
 // GET TODAY SALES
 // =====================================
 exports.getTodaySales = async (req, res) => {
+  try {
 
-try{
+    const start = new Date();
+    start.setHours(0, 0, 0, 0);
 
-const start = new Date();
-start.setHours(0,0,0,0);
+    const end = new Date();
+    end.setHours(23, 59, 59, 999);
 
-const end = new Date();
-end.setHours(23,59,59,999);
+    const sales = await Sale.find({
+      createdAt: {
+        $gte: start,
+        $lte: end
+      }
+    });
 
-const sales = await Sale.find({
-createdAt:{
-$gte: start,
-$lte: end
-}
-});
+    res.json(sales);
 
-res.json(sales);
+  } catch (err) {
 
-}catch(err){
+    res.status(500).json({
+      message: "Failed to fetch today sales",
+      error: err.message
+    });
 
-res.status(500).json({ error: err.message });
-
-}
-
+  }
 };
-
-
 
 // =====================================
 // MONTHLY SALES ANALYTICS
 // =====================================
-exports.getMonthlySales = async (req,res)=>{
+exports.getMonthlySales = async (req, res) => {
+  try {
 
-try{
+    const sales = await Sale.aggregate([
+      {
+        $group: {
+          _id: { $month: "$createdAt" },
+          totalSales: { $sum: "$total" }
+        }
+      },
+      {
+        $sort: { _id: 1 }
+      }
+    ]);
 
-const sales = await Sale.aggregate([
+    const months = [
+      "Jan","Feb","Mar","Apr","May","Jun",
+      "Jul","Aug","Sep","Oct","Nov","Dec"
+    ];
 
-{
-$group:{
-_id:{ $month:"$createdAt" },
-totalSales:{ $sum:"$total" }
-}
-},
+    const labels = [];
+    const values = [];
 
-{
-$sort:{ _id:1 }
-}
+    sales.forEach(s => {
+      labels.push(months[s._id - 1]);
+      values.push(s.totalSales);
+    });
 
-]);
+    res.json({
+      months: labels,
+      sales: values
+    });
 
-const months = [
-"Jan","Feb","Mar","Apr","May","Jun",
-"Jul","Aug","Sep","Oct","Nov","Dec"
-];
+  } catch (err) {
 
-const labels = [];
-const values = [];
+    res.status(500).json({
+      message: "Failed to fetch monthly analytics",
+      error: err.message
+    });
 
-sales.forEach(s=>{
-
-labels.push(months[s._id - 1]);
-values.push(s.totalSales);
-
-});
-
-res.json({
-months: labels,
-sales: values
-});
-
-}catch(err){
-
-res.status(500).json({error:err.message});
-
-}
-
+  }
 };
 
+// =====================================
+// SYNC SALES (OFFLINE SUPPORT)
+// =====================================
 exports.syncSales = async (req, res) => {
-
   try {
 
     const { sales } = req.body;
 
     if (!sales || sales.length === 0) {
-      return res.status(400).json({ message: "No sales to sync" });
+      return res.status(400).json({
+        message: "No sales to sync"
+      });
     }
 
     for (let sale of sales) {
 
-      // prevent duplicate sync
       const exists = await Sale.findOne({ id: sale.id });
 
       if (exists) continue;
 
       await Sale.create(sale);
-
     }
 
-    res.json({ message: "Sync successful" });
+    res.json({
+      message: "Sync successful"
+    });
 
   } catch (err) {
 
-    console.log(err);
+    console.error(err);
 
-    res.status(500).json({ message: "Sync failed" });
+    res.status(500).json({
+      message: "Sync failed",
+      error: err.message
+    });
 
   }
-
 };
-
